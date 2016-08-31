@@ -14,8 +14,6 @@ public class Numbers {
 			lexer = new NumbersLexer(new ANTLRInputStream(System.in));
 		} catch (Exception e) {
 			// Pikachu!
-			// Raichu
-			// Charmander
 			System.out.println("Erro:" + e);
 			System.exit(1);
 			return;
