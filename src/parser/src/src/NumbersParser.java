@@ -1,5 +1,3 @@
-package parser.src;
-
 // Generated from src/Numbers.g4 by ANTLR 4.5.3
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
@@ -10,21 +8,26 @@ import java.util.List;
 import java.util.Iterator;
 import java.util.ArrayList;
 
-@SuppressWarnings({ "all", "warnings", "unchecked", "unused", "cast" })
+@SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class NumbersParser extends Parser {
-	static {
-		RuntimeMetaData.checkVersion("4.5.3", RuntimeMetaData.VERSION);
-	}
+	static { RuntimeMetaData.checkVersion("4.5.3", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
-	protected static final PredictionContextCache _sharedContextCache = new PredictionContextCache();
-	public static final int NEWLINE = 1, BINARY = 2, BIN_DIGIT = 3, DECIMAL = 4, HEXADECIMAL = 5, PLUS = 6, MULTIP = 7,
-			MINUS = 8, DIVIS = 9, POTEN = 10;
-	public static final int RULE_number = 0;
-	public static final String[] ruleNames = { "number" };
+	protected static final PredictionContextCache _sharedContextCache =
+		new PredictionContextCache();
+	public static final int
+		NEWLINE=1, BIN_DIGIT=2, BINARY=3, DECIMAL=4, HEXADECIMAL=5;
+	public static final int
+		RULE_number = 0;
+	public static final String[] ruleNames = {
+		"number"
+	};
 
-	private static final String[] _LITERAL_NAMES = {};
-	private static final String[] _SYMBOLIC_NAMES = { null, "NEWLINE", "BINARY", "BIN_DIGIT" };
+	private static final String[] _LITERAL_NAMES = {
+	};
+	private static final String[] _SYMBOLIC_NAMES = {
+		null, "NEWLINE", "BIN_DIGIT", "BINARY", "DECIMAL", "HEXADECIMAL"
+	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
 	/**
@@ -59,54 +62,34 @@ public class NumbersParser extends Parser {
 	}
 
 	@Override
-	public String getGrammarFileName() {
-		return "Numbers.g4";
-	}
+	public String getGrammarFileName() { return "Numbers.g4"; }
 
 	@Override
-	public String[] getRuleNames() {
-		return ruleNames;
-	}
+	public String[] getRuleNames() { return ruleNames; }
 
 	@Override
-	public String getSerializedATN() {
-		return _serializedATN;
-	}
+	public String getSerializedATN() { return _serializedATN; }
 
 	@Override
-	public ATN getATN() {
-		return _ATN;
-	}
+	public ATN getATN() { return _ATN; }
 
 	public NumbersParser(TokenStream input) {
 		super(input);
-		_interp = new ParserATNSimulator(this, _ATN, _decisionToDFA, _sharedContextCache);
+		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
-
 	public static class NumberContext extends ParserRuleContext {
-		public TerminalNode BINARY() {
-			return getToken(NumbersParser.BINARY, 0);
-		}
-
+		public TerminalNode BINARY() { return getToken(NumbersParser.BINARY, 0); }
 		public NumberContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-
-		@Override
-		public int getRuleIndex() {
-			return RULE_number;
-		}
-
+		@Override public int getRuleIndex() { return RULE_number; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if (listener instanceof NumbersListener)
-				((NumbersListener) listener).enterNumber(this);
+			if ( listener instanceof NumbersListener ) ((NumbersListener)listener).enterNumber(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if (listener instanceof NumbersListener)
-				((NumbersListener) listener).exitNumber(this);
+			if ( listener instanceof NumbersListener ) ((NumbersListener)listener).exitNumber(this);
 		}
 	}
 
@@ -116,22 +99,26 @@ public class NumbersParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-				setState(2);
-				match(BINARY);
+			setState(2);
+			match(BINARY);
 			}
-		} catch (RecognitionException re) {
+		}
+		catch (RecognitionException re) {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
 			_errHandler.recover(this, re);
-		} finally {
+		}
+		finally {
 			exitRule();
 		}
 		return _localctx;
 	}
 
-	public static final String _serializedATN = "\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\5\7\4\2\t\2\3\2\3"
-			+ "\2\3\2\2\2\3\2\2\2\5\2\4\3\2\2\2\4\5\7\4\2\2\5\3\3\2\2\2\2";
-	public static final ATN _ATN = new ATNDeserializer().deserialize(_serializedATN.toCharArray());
+	public static final String _serializedATN =
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\7\7\4\2\t\2\3\2\3"+
+		"\2\3\2\2\2\3\2\2\2\5\2\4\3\2\2\2\4\5\7\5\2\2\5\3\3\2\2\2\2";
+	public static final ATN _ATN =
+		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
 		_decisionToDFA = new DFA[_ATN.getNumberOfDecisions()];
 		for (int i = 0; i < _ATN.getNumberOfDecisions(); i++) {

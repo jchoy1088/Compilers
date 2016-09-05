@@ -1,4 +1,3 @@
-package parser.src;
 // Generated from src/Numbers.g4 by ANTLR 4.5.3
 
 import org.antlr.v4.runtime.ParserRuleContext;

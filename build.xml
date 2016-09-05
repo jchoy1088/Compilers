@@ -62,7 +62,7 @@
         <java classname="${antlrtool}" fork="true" failonerror="true">
             <arg value="${grammar.file}"/>
             <arg value="-o"/>
-            <arg value="${src.dir}/parser"/>
+            <arg value="${src.dir}/parser/src"/>
             <classpath refid="classpath"/>
         </java>
     </target>
