@@ -1,7 +1,7 @@
 grammar Numbers;
 
 STATUS
-:	'for(int i = 0; i < stk.size(); i++){System.out.println(stkNumbers.get(i));}'
+:	'for(int i = 0; i < stk.size(); i++){System.out.println(stk.get(i));}'
 ;
 
 RESET
