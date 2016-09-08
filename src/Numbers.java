@@ -43,9 +43,7 @@ public class Numbers {
 			case NumbersLexer.HEX_NUM:
 				System.out.println("INTEIRO HEXADECIMAL: " + tk.getText());
 				break;
-
 			}
-			;
 		} while (tk != null && tk.getType() != Token.EOF);
 
 	}
