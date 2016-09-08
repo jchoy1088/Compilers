@@ -1,5 +1,4 @@
-<!-- <project name="Numbers" basedir="." default="main"> -->
-<project name="CompiladoresE1" basedir="." default="main">
+<project name="Numbers" basedir="." default="main">
 
     <property name="src.dir"     value="src"/>
     <property name="build.dir"   value="build"/>
@@ -62,7 +61,7 @@
         <java classname="${antlrtool}" fork="true" failonerror="true">
             <arg value="${grammar.file}"/>
             <arg value="-o"/>
-            <arg value="${src.dir}/parser/src"/>
+            <arg value="${src.dir}/parser"/>
             <classpath refid="classpath"/>
         </java>
     </target>
@@ -73,7 +72,7 @@
 </project>
 
 <!--
-<?xml version="1.0" encoding="UTF-8"?>
+     <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="YourProject">
 
