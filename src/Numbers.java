@@ -11,9 +11,6 @@ public class Numbers {
 	public static void main(String[] args) {
 		NumbersLexer lexer = null;
 		Token tk;
-		FileInputStream fis = null;
-		File file = null;
-		Stack<Double> stk;
 		Scanner scn = new Scanner(System.in);
 		try {
 			String tokenscn;
@@ -22,7 +19,6 @@ public class Numbers {
 				strB.append(tokenscn + "\n");
 			}
 			lexer = new NumbersLexer(new ANTLRInputStream(strB.toString()));
-			stk = new Stack<Double>();
 		} catch (Exception e) {
 			System.out.println("Erro:" + e);
 			System.exit(1);
