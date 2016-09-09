@@ -1,77 +1,59 @@
 grammar Numbers;
 
-STATUS
-:	'for(int i = 0; i < stk.size(); i++){System.out.println(stk.get(i));}'
-;
-
-RESET
-:	'stk.clear();'
-;
 
 /*
 // Descomente para gerar codigo em c#
 options {
     language=CSharp;
 }
-*/
 
-number: BINARY; // precisa ao menos uma regra de gramática
-                 // ignorar isso por hora
+*/
+number: BINARY; 
 
 NEWLINE
 :	[\r\n ]+
 ;
 
-/*
-DIGIT
-:	'0'..'9'
-;
-*/
-
-BINARY
-:	BIN_DIGIT+ 'b'
-; // Sequencia de digitos seguida de b  10100b
-
 BIN_DIGIT
 :	[01]
 ;
 
-
-DECIMAL
-:	[0-9]+(.[0-9][0-9]?)?[-+]?'e'?[0-9]+
+DIGIT
+:	('0'..'9')
 ;
 
-HEXADECIMAL
-:	[0][xX][0-9a-fA-F]+
+HEX_MAY
+:	('A'..'F')
 ;
 
-PLUS
-:	'+'
+HEX_MIN
+:	('a'..'f')
 ;
 
-MULTIP
-:	'*'
+BIN_NUM
+:	BIN_DIGIT+ 'b'
 ;
 
-MINUS
-:	'-'
+DEC_NUM
+:	[-+]?[0-9]+'.'?[0-9]+([eE][-+]?[0-9]+)?
 ;
 
-DIVIS
-:	'/'
+HEX_NUM
+:	[0][xX](DIGIT+|HEX_MIN+|HEX_MAY+)
 ;
 
-POTEN
-:	'ˆ'
+INT_NUM
+:	(DIGIT+ |  '-' DIGIT+)
 ;
 
+SIGNO
+:	'*'|'+'|'/'|'-'|'ˆ'
+;
 
+STATUS
+:	'status'
+;
 
-
-/*
-Otro caso
-DECIMAL
-[0-9]+(.[0-9][0-9]?)?[-+]?e?[0-9]+
-HEXADECIMAL
-(?:0[xX])?[0-9a-fA-F]+
-*/
+CLEAR
+:	'clear'
+;
