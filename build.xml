@@ -73,9 +73,7 @@
 
 <!--
      <?xml version="1.0" encoding="UTF-8"?>
-
 <project name="YourProject">
-
     <property name="main.package"    value="yourproject"/>
     <property name="parser.package"  value="${main.package}/parser"/>
     <property name="main.src.dir"    value="src/main"/>
@@ -86,19 +84,15 @@
     <property name="classes.dir"     value="${build.dir}/classes"/>
     <property name="main.build.dir"  value="${classes.dir}/main"/>
     <property name="test.build.dir"  value="${classes.dir}/test"/>
-
     <path id="classpath">
         <pathelement location="${main.src.dir}"/>
         <pathelement location="${test.src.dir}"/>
         <pathelement location="${main.build.dir}"/>
         <pathelement location="${test.build.dir}"/>
-
         <fileset dir="lib">
                 <include name="*.jar"/>
         </fileset>
     </path>
-
-
     <target name="compile" depends="init" description="Compiles all source files.">
         <javac srcdir="${main.src.dir}" destdir="${main.build.dir}" includeantruntime="false">
             <classpath refid="classpath"/>
@@ -107,7 +101,6 @@
             <classpath refid="classpath"/>
         </javac>
     </target>
-
     <target name="generate" depends="init" description="Generates the lexer and parser from the .g grammar file.">
         <echo>Generating the lexer and parser...</echo>
         <java classname="org.antlr.Tool" fork="true" failonerror="true">
@@ -116,10 +109,7 @@
             <arg value="${grammar.file}"/>
             <classpath refid="classpath"/>
         </java>
-
         <antcall target="compile"/>
     </target>
-
 </project>
-
 -->
