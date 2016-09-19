@@ -9,19 +9,17 @@ import org.antlr.v4.runtime.Token;
 
 public class Numbers {
 	public static void main(String[] args) {
-		NumbersLexer lexer = null;
+		FreeLinguagemLexer lexer = null;
 		Token tk;
 		FileInputStream fis = null;
 		File file = null;
 		Stack<Double> stk;
-		Scanner scn = new Scanner(System.in);
+		// Scanner scn = new Scanner(System.in);
 		try {
-			String tokenscn;
-			StringBuilder strB = new StringBuilder();
-			while (scn.hasNext() && !(tokenscn = scn.next()).equalsIgnoreCase("")) {
-				strB.append(tokenscn + "\n");
-			}
-			lexer = new NumbersLexer(new ANTLRInputStream(strB.toString()));
+			ClassLoader classLoader = Numbers.class.getClassLoader();
+			file = new File(classLoader.getResource("inputs.txt").getFile());
+			fis = new FileInputStream(file);
+			lexer = new FreeLinguagemLexer(new ANTLRInputStream(fis));
 			stk = new Stack<Double>();
 		} catch (Exception e) {
 			System.out.println("Erro:" + e);
@@ -33,23 +31,27 @@ public class Numbers {
 			double num = 0.0;
 			Double topo1 = 0.0, topo2 = 0.0;
 			switch (tk.getType()) {
-			case NumbersLexer.BIN_NUM:
+			case FreeLinguagemLexer.BIN_NUM:
+				System.out.println(tk.getType() + " 1");
 				num = convertNumbers(tk.getText(), 0);
 				stk.add(num);
 				break;
-			case NumbersLexer.INT_NUM:
+			case FreeLinguagemLexer.INT_NUM:
+				System.out.println(tk.getType() + " 2");
 				num = Double.parseDouble(tk.getText());
 				stk.add(num);
 				break;
-			case NumbersLexer.DEC_NUM:
+			case FreeLinguagemLexer.DEC_NUM:
+				System.out.println(tk.getType() + " 3");
 				num = Double.parseDouble(tk.getText());
 				stk.add(num);
 				break;
-			case NumbersLexer.HEX_NUM:
+			case FreeLinguagemLexer.HEX_NUM:
+				System.out.println(tk.getType() + " 4");
 				num = convertNumbers(tk.getText(), 1);
 				stk.add(num);
 				break;
-			case NumbersLexer.SIGNO:
+			case FreeLinguagemLexer.SIGNO:
 				char op = tk.getText().charAt(0);
 				if (stk.size() > 1) {
 					if (op == '*')
@@ -65,12 +67,12 @@ public class Numbers {
 					stk.add(num);
 				}
 				break;
-			case NumbersLexer.STATUS:
+			case FreeLinguagemLexer.STATUS:
 				for (int i = 0; i < stk.size(); i++) {
 					System.out.println(i + " - " + stk.get(i));
 				}
 				break;
-			case NumbersLexer.CLEAR:
+			case FreeLinguagemLexer.CLEAR:
 				stk.clear();
 				break;
 			}
