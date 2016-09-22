@@ -46,11 +46,11 @@
 		</java>
 	</target>
 
-	<target name="rungui" depends="jar" description="Executinf rungui with ant">
+	<target name="grun" depends="jar" description="Executinf rungui with ant">
 		<echo>Please wait... the command is executing</echo>
 		<java fork="true" classname="${grun}">
 			<arg value="FreeLinguagem" />
-			<arg value="expressao" />
+			<arg value="raiz" />
 			<arg value="-gui" />
 			<arg value="${build.dir}/../resources/inputs.txt" />
 			<classpath>
