@@ -4,7 +4,7 @@
 	<property name="build.dir" value="build" />
 	<property name="classes.dir" value="${build.dir}/classes" />
 	<property name="jar.dir" value="${build.dir}/jar" />
-	<property name="main-class" value="Numbers" />
+	<property name="main-class" value="Interpreter" />
 	<property name="grammar.file" value="${src.dir}/FreeLinguagem.g4" />
 	<property name="grun" value="org.antlr.v4.gui.TestRig" />
 	<property name="antlrtool" value="org.antlr.v4.Tool" />
@@ -22,10 +22,8 @@
 
 	<target name="compile" depends="generate">
 		<mkdir dir="${classes.dir}" />
-		<javac srcdir="${src.dir}" destdir="${classes.dir}"
-			classpathref="classpath" />
-		<javac srcdir="${src.dir}/parser/" destdir="${classes.dir}"
-			classpathref="classpath" />
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" />
+		<javac srcdir="${src.dir}/parser/" destdir="${classes.dir}" classpathref="classpath" />
 	</target>
 
 	<target name="jar" depends="compile">
@@ -61,8 +59,7 @@
 
 	</target>
 
-	<target name="generate"
-		description="Generates the lexer and parser from the .g grammar file.">
+	<target name="generate" description="Generates the lexer and parser from the .g grammar file.">
 		<echo>Generating the lexer and parser...</echo>
 		<java classname="${antlrtool}" fork="true" failonerror="true">
 			<arg value="${grammar.file}" />

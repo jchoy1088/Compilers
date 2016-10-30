@@ -14,9 +14,9 @@ public class Numbers {
 		FileInputStream fis = null;
 		File file = null;
 		Stack<Double> stk;
-		// Scanner scn = new Scanner(System.in);
 		try {
 			ClassLoader classLoader = Numbers.class.getClassLoader();
+			System.out.println(classLoader.getResource("inputs.txt") + "--------");
 			file = new File(classLoader.getResource("inputs.txt").getFile());
 			fis = new FileInputStream(file);
 			lexer = new FreeLinguagemLexer(new ANTLRInputStream(fis));
@@ -31,27 +31,27 @@ public class Numbers {
 			double num = 0.0;
 			Double topo1 = 0.0, topo2 = 0.0;
 			switch (tk.getType()) {
-			case FreeLinguagemLexer.BIN_NUM:
+			case FreeLinguagemLexer.BINARY:
 				System.out.println(tk.getType() + " 1");
 				num = convertNumbers(tk.getText(), 0);
 				stk.add(num);
 				break;
-			case FreeLinguagemLexer.INT_NUM:
+			case FreeLinguagemLexer.DECIMAL:
 				System.out.println(tk.getType() + " 2");
 				num = Double.parseDouble(tk.getText());
 				stk.add(num);
 				break;
-			case FreeLinguagemLexer.DEC_NUM:
+			case FreeLinguagemLexer.FLOAT:
 				System.out.println(tk.getType() + " 3");
 				num = Double.parseDouble(tk.getText());
 				stk.add(num);
 				break;
-			case FreeLinguagemLexer.HEX_NUM:
+			case FreeLinguagemLexer.HEXADECIMAL:
 				System.out.println(tk.getType() + " 4");
 				num = convertNumbers(tk.getText(), 1);
 				stk.add(num);
 				break;
-			case FreeLinguagemLexer.SIGNO:
+			case FreeLinguagemLexer.TOK_PLUS_OR_MINUS:
 				char op = tk.getText().charAt(0);
 				if (stk.size() > 1) {
 					if (op == '*')
@@ -67,14 +67,11 @@ public class Numbers {
 					stk.add(num);
 				}
 				break;
-			case FreeLinguagemLexer.STATUS:
-				for (int i = 0; i < stk.size(); i++) {
-					System.out.println(i + " - " + stk.get(i));
-				}
-				break;
-			case FreeLinguagemLexer.CLEAR:
-				stk.clear();
-				break;
+			/*
+			 * case FreeLinguagemLexer.STATUS: for (int i = 0; i < stk.size();
+			 * i++) { System.out.println(i + " - " + stk.get(i)); } break; case
+			 * FreeLinguagemLexer.CLEAR: stk.clear(); break;
+			 */
 			}
 		} while (tk != null && tk.getType() != Token.EOF);
 
