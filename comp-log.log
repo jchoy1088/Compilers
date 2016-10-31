@@ -1,0 +1,494 @@
+Buildfile: /home/jchoy/ws/ws_compiladores/CompiladoresE1/build.xml
+
+generate:
+     [echo] Generating the lexer and parser...
+
+compile:
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/build.xml:25: warning: 'includeantruntime' was not set, defaulting to build.sysclasspath=last; set to false for repeatable builds
+    [javac] Compiling 8 source files to /home/jchoy/ws/ws_compiladores/CompiladoresE1/build/classes
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:642: error: cannot find symbol
+    [javac] 		public Type t;
+    [javac] 		       ^
+    [javac]   symbol:   class Type
+    [javac]   location: class TypeContext
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:728: error: cannot find symbol
+    [javac] 		public Type bt;
+    [javac] 		       ^
+    [javac]   symbol:   class Type
+    [javac]   location: class Basic_typeContext
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1484: error: cannot find symbol
+    [javac] 		public Type me;
+    [javac] 		       ^
+    [javac]   symbol:   class Type
+    [javac]   location: class MetaexprContext
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:2156: error: cannot find symbol
+    [javac] 		public Type c;
+    [javac] 		       ^
+    [javac]   symbol:   class Type
+    [javac]   location: class CastContext
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:2599: error: cannot find symbol
+    [javac] 		public Type n;
+    [javac] 		       ^
+    [javac]   symbol:   class Type
+    [javac]   location: class NumberContext
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:2726: error: cannot find symbol
+    [javac] 		public Type s;
+    [javac] 		       ^
+    [javac]   symbol:   class Type
+    [javac]   location: class SymbolContext
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:699: error: cannot find symbol
+    [javac] 				            t = b.bt;
+    [javac] 				            ^
+    [javac]   symbol:   variable t
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:699: error: cannot find symbol
+    [javac] 				            t = b.bt;
+    [javac] 				                ^
+    [javac]   symbol:   variable b
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:755: error: cannot find symbol
+    [javac] 				            bt = Type.Integer;
+    [javac] 				            ^
+    [javac]   symbol:   variable bt
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:755: error: cannot find symbol
+    [javac] 				            bt = Type.Integer;
+    [javac] 				                 ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:765: error: cannot find symbol
+    [javac] 				            bt = Type.Boolean;
+    [javac] 				            ^
+    [javac]   symbol:   variable bt
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:765: error: cannot find symbol
+    [javac] 				            bt = Type.Boolean;
+    [javac] 				                 ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:775: error: cannot find symbol
+    [javac] 				            bt = Type.String;
+    [javac] 				            ^
+    [javac]   symbol:   variable bt
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:775: error: cannot find symbol
+    [javac] 				            bt = Type.String;
+    [javac] 				                 ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:785: error: cannot find symbol
+    [javac] 				            bt = Type.Float;
+    [javac] 				            ^
+    [javac]   symbol:   variable bt
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:785: error: cannot find symbol
+    [javac] 				            bt = Type.Float;
+    [javac] 				                 ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1074: error: cannot find symbol
+    [javac] 			            symbolTable.add(obj);    
+    [javac] 			                            ^
+    [javac]   symbol:   variable obj
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1075: error: cannot find symbol
+    [javac] 			            if( m.me == Type.Integer)
+    [javac] 			                ^
+    [javac]   symbol:   variable m
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1075: error: cannot find symbol
+    [javac] 			            if( m.me == Type.Integer)
+    [javac] 			                        ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1079: error: cannot find symbol
+    [javac] 			            if( m.me == Type.Float)
+    [javac] 			                ^
+    [javac]   symbol:   variable m
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1079: error: cannot find symbol
+    [javac] 			            if( m.me == Type.Float)
+    [javac] 			                        ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1083: error: cannot find symbol
+    [javac] 			            if( m.me == Type.String)
+    [javac] 			                ^
+    [javac]   symbol:   variable m
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1083: error: cannot find symbol
+    [javac] 			            if( m.me == Type.String)
+    [javac] 			                        ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1087: error: cannot find symbol
+    [javac] 			            if( m.me == Type.Boolean)
+    [javac] 			                ^
+    [javac]   symbol:   variable m
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1087: error: cannot find symbol
+    [javac] 			            if( m.me == Type.Boolean)
+    [javac] 			                        ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1799: error: cannot find symbol
+    [javac] 				    	if( s.s == Type.String )
+    [javac] 				    	    ^
+    [javac]   symbol:   variable s
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1799: error: cannot find symbol
+    [javac] 				    	if( s.s == Type.String )
+    [javac] 				    	           ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1801: error: cannot find symbol
+    [javac] 				    		me = Type.String;
+    [javac] 				    		^
+    [javac]   symbol:   variable me
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1801: error: cannot find symbol
+    [javac] 				    		me = Type.String;
+    [javac] 				    		     ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1805: error: cannot find symbol
+    [javac] 				    		me = Type.Integer;
+    [javac] 				    		^
+    [javac]   symbol:   variable me
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1805: error: cannot find symbol
+    [javac] 				    		me = Type.Integer;
+    [javac] 				    		     ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1859: error: cannot find symbol
+    [javac] 				m = c;
+    [javac] 				^
+    [javac]   symbol:   variable m
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1859: error: cannot find symbol
+    [javac] 				m = c;
+    [javac] 				    ^
+    [javac]   symbol:   variable c
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1887: error: cannot find symbol
+    [javac] 						                      if(d.me == Type.String || e.me == Type.String)
+    [javac] 						                         ^
+    [javac]   symbol:   variable d
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1887: error: cannot find symbol
+    [javac] 						                      if(d.me == Type.String || e.me == Type.String)
+    [javac] 						                                 ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1887: error: cannot find symbol
+    [javac] 						                      if(d.me == Type.String || e.me == Type.String)
+    [javac] 						                                                ^
+    [javac]   symbol:   variable e
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1887: error: cannot find symbol
+    [javac] 						                      if(d.me == Type.String || e.me == Type.String)
+    [javac] 						                                                        ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1891: error: cannot find symbol
+    [javac] 						                      else if(d.me == Type.Float || d.me == Type.Float)
+    [javac] 						                              ^
+    [javac]   symbol:   variable d
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1891: error: cannot find symbol
+    [javac] 						                      else if(d.me == Type.Float || d.me == Type.Float)
+    [javac] 						                                      ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1891: error: cannot find symbol
+    [javac] 						                      else if(d.me == Type.Float || d.me == Type.Float)
+    [javac] 						                                                    ^
+    [javac]   symbol:   variable d
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1891: error: cannot find symbol
+    [javac] 						                      else if(d.me == Type.Float || d.me == Type.Float)
+    [javac] 						                                                            ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1893: error: cannot find symbol
+    [javac] 						                          me = Type.Float;
+    [javac] 						                          ^
+    [javac]   symbol:   variable me
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1893: error: cannot find symbol
+    [javac] 						                          me = Type.Float;
+    [javac] 						                               ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1897: error: cannot find symbol
+    [javac] 						                          me = Type.Integer;
+    [javac] 						                          ^
+    [javac]   symbol:   variable me
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1897: error: cannot find symbol
+    [javac] 						                          me = Type.Integer;
+    [javac] 						                               ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1914: error: cannot find symbol
+    [javac] 						                      if(e.me == Type.String || d.me == Type.String)
+    [javac] 						                         ^
+    [javac]   symbol:   variable e
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1914: error: cannot find symbol
+    [javac] 						                      if(e.me == Type.String || d.me == Type.String)
+    [javac] 						                                 ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1914: error: cannot find symbol
+    [javac] 						                      if(e.me == Type.String || d.me == Type.String)
+    [javac] 						                                                ^
+    [javac]   symbol:   variable d
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1914: error: cannot find symbol
+    [javac] 						                      if(e.me == Type.String || d.me == Type.String)
+    [javac] 						                                                        ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1916: error: cannot find symbol
+    [javac] 						                          me = Type.String;
+    [javac] 						                          ^
+    [javac]   symbol:   variable me
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1916: error: cannot find symbol
+    [javac] 						                          me = Type.String;
+    [javac] 						                               ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1937: error: cannot find symbol
+    [javac] 						                      if(d.me == Type.String || e.me == Type.String)
+    [javac] 						                         ^
+    [javac]   symbol:   variable d
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1937: error: cannot find symbol
+    [javac] 						                      if(d.me == Type.String || e.me == Type.String)
+    [javac] 						                                 ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1937: error: cannot find symbol
+    [javac] 						                      if(d.me == Type.String || e.me == Type.String)
+    [javac] 						                                                ^
+    [javac]   symbol:   variable e
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1937: error: cannot find symbol
+    [javac] 						                      if(d.me == Type.String || e.me == Type.String)
+    [javac] 						                                                        ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1941: error: cannot find symbol
+    [javac] 						                      else if(d.me == Type.Float || d.me == Type.Float)
+    [javac] 						                              ^
+    [javac]   symbol:   variable d
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1941: error: cannot find symbol
+    [javac] 						                      else if(d.me == Type.Float || d.me == Type.Float)
+    [javac] 						                                      ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1941: error: cannot find symbol
+    [javac] 						                      else if(d.me == Type.Float || d.me == Type.Float)
+    [javac] 						                                                    ^
+    [javac]   symbol:   variable d
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1941: error: cannot find symbol
+    [javac] 						                      else if(d.me == Type.Float || d.me == Type.Float)
+    [javac] 						                                                            ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1943: error: cannot find symbol
+    [javac] 						                          me = Type.Float;
+    [javac] 						                          ^
+    [javac]   symbol:   variable me
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1943: error: cannot find symbol
+    [javac] 						                          me = Type.Float;
+    [javac] 						                               ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1947: error: cannot find symbol
+    [javac] 						                          me = Type.Integer;
+    [javac] 						                          ^
+    [javac]   symbol:   variable me
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1947: error: cannot find symbol
+    [javac] 						                          me = Type.Integer;
+    [javac] 						                               ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1964: error: cannot find symbol
+    [javac] 						                      if(d.me == Type.String || e.me == Type.String)
+    [javac] 						                         ^
+    [javac]   symbol:   variable d
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1964: error: cannot find symbol
+    [javac] 						                      if(d.me == Type.String || e.me == Type.String)
+    [javac] 						                                 ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1964: error: cannot find symbol
+    [javac] 						                      if(d.me == Type.String || e.me == Type.String)
+    [javac] 						                                                ^
+    [javac]   symbol:   variable e
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1964: error: cannot find symbol
+    [javac] 						                      if(d.me == Type.String || e.me == Type.String)
+    [javac] 						                                                        ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1968: error: cannot find symbol
+    [javac] 						                      else if(d.me == Type.Float || d.me == Type.Float)
+    [javac] 						                              ^
+    [javac]   symbol:   variable d
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1968: error: cannot find symbol
+    [javac] 						                      else if(d.me == Type.Float || d.me == Type.Float)
+    [javac] 						                                      ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1968: error: cannot find symbol
+    [javac] 						                      else if(d.me == Type.Float || d.me == Type.Float)
+    [javac] 						                                                    ^
+    [javac]   symbol:   variable d
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1968: error: cannot find symbol
+    [javac] 						                      else if(d.me == Type.Float || d.me == Type.Float)
+    [javac] 						                                                            ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1970: error: cannot find symbol
+    [javac] 						                          me = Type.Float;
+    [javac] 						                          ^
+    [javac]   symbol:   variable me
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1970: error: cannot find symbol
+    [javac] 						                          me = Type.Float;
+    [javac] 						                               ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1974: error: cannot find symbol
+    [javac] 						                          me = Type.Integer;
+    [javac] 						                          ^
+    [javac]   symbol:   variable me
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1974: error: cannot find symbol
+    [javac] 						                          me = Type.Integer;
+    [javac] 						                               ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1991: error: cannot find symbol
+    [javac] 						                      if(d.me == Type.String || e.me == Type.String)
+    [javac] 						                         ^
+    [javac]   symbol:   variable d
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1991: error: cannot find symbol
+    [javac] 						                      if(d.me == Type.String || e.me == Type.String)
+    [javac] 						                                 ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1991: error: cannot find symbol
+    [javac] 						                      if(d.me == Type.String || e.me == Type.String)
+    [javac] 						                                                ^
+    [javac]   symbol:   variable e
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1991: error: cannot find symbol
+    [javac] 						                      if(d.me == Type.String || e.me == Type.String)
+    [javac] 						                                                        ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1995: error: cannot find symbol
+    [javac] 						                      else if(d.me == Type.Float || d.me == Type.Float)
+    [javac] 						                              ^
+    [javac]   symbol:   variable d
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1995: error: cannot find symbol
+    [javac] 						                      else if(d.me == Type.Float || d.me == Type.Float)
+    [javac] 						                                      ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1995: error: cannot find symbol
+    [javac] 						                      else if(d.me == Type.Float || d.me == Type.Float)
+    [javac] 						                                                    ^
+    [javac]   symbol:   variable d
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1995: error: cannot find symbol
+    [javac] 						                      else if(d.me == Type.Float || d.me == Type.Float)
+    [javac] 						                                                            ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1997: error: cannot find symbol
+    [javac] 						                          me = Type.Float;
+    [javac] 						                          ^
+    [javac]   symbol:   variable me
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:1997: error: cannot find symbol
+    [javac] 						                          me = Type.Float;
+    [javac] 						                               ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:2001: error: cannot find symbol
+    [javac] 						                          me = Type.Integer;
+    [javac] 						                          ^
+    [javac]   symbol:   variable me
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:2001: error: cannot find symbol
+    [javac] 						                          me = Type.Integer;
+    [javac] 						                               ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:2199: error: cannot find symbol
+    [javac] 			    	c = t.t; 
+    [javac] 			    	^
+    [javac]   symbol:   variable c
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:2199: error: cannot find symbol
+    [javac] 			    	c = t.t; 
+    [javac] 			    	    ^
+    [javac]   symbol:   variable t
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:2673: error: cannot find symbol
+    [javac] 				        	n = Type.Float;
+    [javac] 				        	^
+    [javac]   symbol:   variable n
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:2673: error: cannot find symbol
+    [javac] 				        	n = Type.Float;
+    [javac] 				        	    ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:2684: error: cannot find symbol
+    [javac] 					    	n = Type.Float;
+    [javac] 					    	^
+    [javac]   symbol:   variable n
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:2684: error: cannot find symbol
+    [javac] 					    	n = Type.Float;
+    [javac] 					    	    ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:2695: error: cannot find symbol
+    [javac] 				    		n = Type.Integer;
+    [javac] 				    		^
+    [javac]   symbol:   variable n
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:2695: error: cannot find symbol
+    [javac] 				    		n = Type.Integer;
+    [javac] 				    		    ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:2706: error: cannot find symbol
+    [javac] 					    	n = Type.Integer;
+    [javac] 					    	^
+    [javac]   symbol:   variable n
+    [javac]   location: class FreeLinguagemParser
+    [javac] /home/jchoy/ws/ws_compiladores/CompiladoresE1/src/parser/src/FreeLinguagemParser.java:2706: error: cannot find symbol
+    [javac] 					    	n = Type.Integer;
+    [javac] 					    	    ^
+    [javac]   symbol:   variable Type
+    [javac]   location: class FreeLinguagemParser
+    [javac] 97 errors
