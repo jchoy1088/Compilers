@@ -1,36 +1,33 @@
-import org.antlr.v4.runtime.*; // class ANTLRInputStream , Token
+import java.io.FileInputStream;
 
-import java.io.*;
 import javax.swing.JFileChooser;
-import javax.swing.filechooser.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+// class ANTLRInputStream , Token
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
 
 
-public class Interpreter{
+public class Interpreter {
 
-	public static void main(String args[]){
-    	FreeLinguagemLexer lexer;
-    	FreeLinguagemParser parser;
-
-        JFileChooser chooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("Text File", "txt");
-        chooser.setFileFilter(filter);
-        int retval = chooser.showOpenDialog(null);
-        if (retval != JFileChooser.APPROVE_OPTION)
-            return;
-
-        File input = chooser.getSelectedFile();
-
-        try {
-            FileInputStream fin = new FileInputStream(input);
-            lexer = new FreeLinguagemLexer(new ANTLRInputStream(fin));
-            CommonTokenStream tokens = new CommonTokenStream(lexer);
-            parser = new FreeLinguagemParser(tokens);
-            parser.interprete(); // Comecando dessa regra , poderia trocar por .funcbody ou .metaexpr
-        } catch (Exception e) {
-            // Pikachu!
-            System.out.println("Erro:" + e);
-            System.exit(1);
-            return;
-        }
+	public static void main(String args[]) {
+		// ou recebe como argumento, depende de como preferir executar
+		JFileChooser chooser = new JFileChooser();
+		chooser.setFileFilter(new FileNameExtensionFilter("Text File", "txt"));
+		int retval = chooser.showOpenDialog(null);
+		if (retval != JFileChooser.APPROVE_OPTION)
+			return;
+		try {
+			FileInputStream fin = new FileInputStream(chooser.getSelectedFile());
+			FreeLinguagemLexer lexer = new FreeLinguagemLexer(new ANTLRInputStream(fin));
+			CommonTokenStream tokens = new CommonTokenStream(lexer);
+			FreeLinguagemParser parser = new FreeLinguagemParser(tokens);
+			parser.funcbody(); // Comecando dessa regra , poderia trocar
+			// por .funcbody ou .metaexpr
+		} catch (Exception e) {
+			// Pikachu!
+			System.out.println("Erro:" + e);
+			return;
+		}
 	}
 }

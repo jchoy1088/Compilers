@@ -1,4 +1,4 @@
-<project name="CompiladoresE1" basedir="." default="main">
+<project name="Interpreter" basedir="." default="main">
 
 	<property name="src.dir" value="src" />
 	<property name="build.dir" value="build" />
@@ -17,16 +17,19 @@
 
 
 	<target name="clean">
+		<echo>[COMPILE] :: Please wait... the command compile is executing</echo>
 		<delete dir="${build.dir}" />
 	</target>
 
 	<target name="compile" depends="generate">
+		<echo>[COMPILE] :: Please wait... the command compile is executing</echo>
 		<mkdir dir="${classes.dir}" />
 		<javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" />
-		<javac srcdir="${src.dir}/parser/" destdir="${classes.dir}" classpathref="classpath" />
+		<javac srcdir="${src.dir}/parser" destdir="${classes.dir}" classpathref="classpath" />
 	</target>
 
 	<target name="jar" depends="compile">
+		<echo>[JAR] :: Please wait... the command jar is executing</echo>
 		<mkdir dir="${jar.dir}" />
 		<jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
 			<manifest>
@@ -36,6 +39,7 @@
 	</target>
 
 	<target name="run" depends="jar">
+		<echo>[RUN] :: Please wait... the command run is executing</echo>
 		<java fork="true" classname="${main-class}">
 			<classpath>
 				<path refid="classpath" />
@@ -45,7 +49,7 @@
 	</target>
 
 	<target name="grun" depends="jar" description="Executinf rungui with ant">
-		<echo>Please wait... the command is executing</echo>
+		<echo>[GRUN] :: Please wait... the command is executing</echo>
 		<java fork="true" classname="${grun}">
 			<arg value="FreeLinguagem" />
 			<arg value="interpreter" />
@@ -60,7 +64,7 @@
 	</target>
 
 	<target name="generate" description="Generates the lexer and parser from the .g grammar file.">
-		<echo>Generating the lexer and parser...</echo>
+		<echo>[GENERATE] :: Generating the lexer and parser...</echo>
 		<java classname="${antlrtool}" fork="true" failonerror="true">
 			<arg value="${grammar.file}" />
 			<arg value="-o" />
