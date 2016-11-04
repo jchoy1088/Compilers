@@ -1,19 +1,36 @@
 grammar FreeLinguagem;
 
 
+
+
 @header {
 import java.util.*;
+
+
 }
 
 
 @members {
 	List<String> symbolTable = new ArrayList<String>();
+	public static class Type{
+		static int i;
+		static String s;
+		static float f;
+		static boolean b;
+		static char c;
+	}
+
 }
 
-WS : [ \r\t\u000C\n]+ -> channel(HIDDEN)
+
+
+WS
+	:
+		[ \r\t\u000C\n]+ -> channel(HIDDEN)
     ;
 
 COMMENT : '//' ~('\n'|'\r')* '\r'? '\n' -> channel(HIDDEN);
+
 
 program
     : fdecls maindecl
@@ -86,7 +103,7 @@ type
     :
     b = basic_type
 		{
-            t = b.bt;
+            $t = $b.bt;
         }
         #basictype_rule
     |   sequence_type
@@ -98,25 +115,25 @@ type
 
 basic_type
     returns [Type bt]
-    : 'i'
+    : 'int'
         {
-            bt = Type.Integer;
+            $bt = Type.i;
         }
-    | 'b'
+    | 'boolean'
         {
-            bt = Type.Boolean;
+            $bt = Type.b;
         }
-    | 's'
+    | 'String'
         {
-            bt = Type.String;
+            $bt = Type.s;
         }
-    | 'f'
+    | 'float'
         {
-            bt = Type.Float;
+            $bt = Type.f;
         }
-   	| 'c'
+   	| 'char'
    		{
-   			bt = Type.Char;
+   			$bt = Type.c;
    		}
     ;
 
@@ -148,21 +165,20 @@ interprete
 	:
 	m = metaexpr
         {
-            System.out.println("Comecando o programa");  
-            symbolTable.add(obj);    
-            if( m.me == Type.Integer)
+            System.out.println("Comecando o programa");
+            if( $m.me == Type.i)
             {
                 System.out.println("Expressao inteira");
             } 
-            if( m.me == Type.Float)
+            if( $m.me == Type.f)
             {
                 System.out.println("Expressao float");
             } 
-            if( m.me == Type.String)
+            if( $m.me == Type.s)
             {
                 System.out.println("Expressao string");
             } 
-            if( m.me == Type.Boolean)
+            if( $m.me == Type.b)
             {
                 System.out.println("Expressao booleana");
             }
@@ -198,13 +214,13 @@ metaexpr
     | sequence_expr                                  #me_list_create_rule    // creates a list [x]
     | TOK_NEG s = symbol
     {
-    	if( s.s == Type.String )
+    	if( $s.s == Type.s )
     	{
-    		me = Type.String;
+    		$me = Type.s;
     	}
     	else
     	{
-    		me = Type.Integer;
+    		$me = Type.i;
     	}
     }
     	#me_boolneg_rule        // Negate a variable
@@ -212,25 +228,25 @@ metaexpr
     	#me_boolnegparens_rule  //        or anything in between ( )
     | d=metaexpr TOK_POWER e=metaexpr
     {
-        if(d.me == Type.String || e.me == Type.String)
+        if( $d.me == Type.s || $e.me == Type.s)
         {
         	System.out.println("ERRO");
         }
-        else if(d.me == Type.Float || d.me == Type.Float)
+        else if($d.me == Type.f || $d.me == Type.f)
         {
-            me = Type.Float;
+            $me = Type.f;
         }
         else
         {
-            me = Type.Integer;
+            $me = Type.i;
         }
     }
         #me_exprpower_rule      // Exponentiation
     | e=metaexpr TOK_CONCAT d=metaexpr
     {
-        if(e.me == Type.String || d.me == Type.String)
+        if($e.me == Type.s || $d.me == Type.s)
         {
-            me = Type.String;
+            $me = Type.s;
         }
         else
         {
@@ -240,76 +256,73 @@ metaexpr
         #me_listconcat_rule     // Sequence concatenation
     | e=metaexpr TOK_DIV_OR_MUL d=metaexpr
         {
-            if(d.me == Type.String || e.me == Type.String)
+            if($d.me == Type.s || $e.me == Type.s)
             {
                 System.out.println("ERRO");
             }
-            else if(d.me == Type.Float || d.me == Type.Float)
+            else if($d.me == Type.f || $d.me == Type.f)
             {
-                me = Type.Float;
+                $me = Type.f;
             }
             else
             {
-                me = Type.Integer;
+                $me = Type.i;
             }
         }
         #me_exprmuldiv_rule     // Div and Mult are equal
     | e=metaexpr TOK_PLUS_OR_MINUS d=metaexpr
         {
-            if(d.me == Type.String || e.me == Type.String)
+            if($d.me == Type.s || $e.me == Type.s)
             {
                 System.out.println("ERRO");
             }
-            else if(d.me == Type.Float || d.me == Type.Float)
+            else if($d.me == Type.f || $d.me == Type.f)
             {
-                me = Type.Float;
+                $me = Type.f;
             }
             else
             {
-                me = Type.Integer;
+                $me = Type.i;
             }
         }
         #me_exprplusminus_rule  // Sum and Sub are equal
     | e=metaexpr TOK_CMP_GT_LT d=metaexpr
     {
-        if((e.me != d.me) || d.me == Type.String || e.me == Type.String )
+        if(($e.me != $d.me) || $d.me == Type.s || $e.me == Type.s)
         {
     		System.out.println("ERRO");
         }
         else{
-        	me = Type.Boolean;
+        	$me = Type.b;
         }
     }
     	#me_boolgtlt_rule       // < <= >= > are equal
     | e=metaexpr TOK_CMP_EQ_DIFF d=metaexpr
-     {
-        if((e.me != d.me) || d.me == Type.String || e.me == Type.String )
+    /* {
+        if(($e.me != $d.me) || $d.me == Type.s || $e.me == Type.s)
         {
     		System.out.println("ERRO");
         }
         else{
-        	me = Type.Boolean;
+        	$me = Type.b;
         }
-    }
+    } */
     	#me_booleqdiff_rule     // == and != are egual
-    | metaexpr TOK_BOOL_AND_OR metaexpr
+    | e=metaexpr TOK_BOOL_AND_OR d=metaexpr
      {
-        if((e.me != d.me) || d.me == Type.String || e.me == Type.String )
+        if(($e.me != $d.me) || $d.me == Type.s || $e.me == Type.s)
         {
     		System.out.println("ERRO");
         }
         else{
-        	me = Type.Boolean;
+        	$me = Type.b;
         }
     }
     	#me_boolandor_rule      // &&   and  ||  are equal
     | symbol                                         #me_exprsymbol_rule     // a single symbol
     | literal                                        #me_exprliteral_rule    // literal value
     | funcall                                        #me_exprfuncall_rule    // a funcion call
-    | cast
-    {
-    	m = c;
-    }
+    | c = cast
         #me_exprcast_rule       // cast a type to other
     ;
 
@@ -328,7 +341,7 @@ cast
     :
     t=type funcbody
     {
-    	c = t.t; 
+    	$c = $t.t;
     }
     	#cast_rule
     ;
@@ -347,20 +360,23 @@ literal
 	returns [Type l]
 	:
         'nil'                                           #literalnil_rule
-    |   'true'                                          #literaltrue_rule
+    |   'true'
+    {
+		$l = Type.b;
+    }                                     #literaltrue_rule
     |   n = number
     {
-		l = n.n;
+		$l = Type.i;
     }
     	#literalnumber_rule
     |   sl = strlit
     {
-    	l = sl.sl;
+    	$l = Type.s;
     }
     	#literalstring_rule
     |   cl = charlit
     {
-    	l = cl.cl;
+    	$l = Type.c;
     }                                         #literal_char_rule
     ;
 
@@ -380,20 +396,20 @@ number
 	returns [Type n]:
         FLOAT
         {
-        	n = Type.Float;
+        	$n = Type.f;
         }
         #numberfloat_rule
     |   DECIMAL
 	    {
-	    	n = Type.Float;
+	    	$n = Type.f;
 	    }                                        	    #numberdecimal_rule
     |   HEXADECIMAL
     	{
-    		n = Type.Integer;
+    		$n = Type.i;
     	}                                               #numberhexadecimal_rule
     |   BINARY
 	    {
-	    	n = Type.Integer;
+	    	$n = Type.i;
 	    }                                               #numberbinary_rule
       ;
 
