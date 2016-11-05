@@ -7,10 +7,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 
-
 public class Interpreter {
 
 	public static void main(String args[]) {
+
 		// ou recebe como argumento, depende de como preferir executar
 		JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(new FileNameExtensionFilter("Text File", "txt"));

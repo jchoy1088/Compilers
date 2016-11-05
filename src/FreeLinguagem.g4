@@ -1,461 +1,468 @@
-grammar FreeLinguagem;
-
-
-
+grammar FreeLinguagem ;
 
 @header {
 import java.util.*;
-
-
+import types.*;
 }
-
 
 @members {
 	List<String> symbolTable = new ArrayList<String>();
-	public static class Type{
-		static int i;
-		static String s;
-		static float f;
-		static boolean b;
-		static char c;
-	}
-
 }
 
-
-
 WS
-	:
-		[ \r\t\u000C\n]+ -> channel(HIDDEN)
-    ;
+	: [ \r\t\u000C\n]+ -> channel(HIDDEN) ;
 
-COMMENT : '//' ~('\n'|'\r')* '\r'? '\n' -> channel(HIDDEN);
-
+COMMENT
+	: '//' ~('\n'|'\r')* '\r'? '\n' -> channel(HIDDEN) ;
 
 program
-    : fdecls maindecl
-	    {
+	: fdecls maindecl {
 	    	System.out.println("Parseou um programa!");
-	    }
-    ;
+	}
+	;
 
 fdecls
-    : fdecl fdecls                                   #fdecls_one_decl_rule
-    |                                                #fdecls_end_rule
-    ;
+	: fdecl fdecls                                   #fdecls_one_decl_rule
+	| #fdecls_end_rule ;
 
-maindecl: 'def' 'main' '=' funcbody                  #programmain_rule
-    ;
+maindecl
+	: 'def' 'main' '=' funcbody                  #programmain_rule ;
 
-fdecl: 'def' functionname fdeclparams '=' funcbody   #funcdef_rule
+fdecl
+	: 'def' functionname fdeclparams '=' funcbody   #funcdef_rule
         /*{
             System.Console.WriteLine("Achou declaração: {0} com {1}", $functionname.text, $fdeclparams.plist.ToString());
-        }*/
-    ;
+        }*/ ;
 
 fdeclparams
 returns [List<String> plist]
-@init {
+@ init {
     $plist = new ArrayList<String>();
 }
-@after {
+@ after {
     for (String s : $plist) {
         System.out.println("Parametro: " + s);
     }
 }
-    :   fdeclparam
-        {
+	: fdeclparam {
             $plist.add($fdeclparam.pname);
-        }
-        fdeclparams_cont[$plist]
+	}
+	fdeclparams_cont[$plist]
+      	#fdeclparams_one_param_rule
+	|
+		#fdeclparams_no_params ;
 
-                                                     #fdeclparams_one_param_rule
-    |                                                #fdeclparams_no_params
-    ;
-
-fdeclparams_cont[List<String> plist]
-    : ',' fdeclparam
-        {
+fdeclparams_cont
+[List<String> plist]
+	: ',' fdeclparam {
             $plist.add($fdeclparam.pname);
-        }
-        fdeclparams_cont[$plist]
-                                                     #fdeclparams_cont_rule
-    |                                                #fdeclparams_end_rule
-    ;
+	}
+	fdeclparams_cont[$plist]
+       #fdeclparams_cont_rule
+	| #fdeclparams_end_rule ;
 
 fdeclparam
     returns [String pname, String ptype]
-    : symbol ':' type
-        {
+	: symbol ':' type {
             $pname = $symbol.text;
             $ptype = $type.text;
-        }
-        #fdecl_param_rule
-    ;
-
+	}
+																		        #fdecl_param_rule ;
 functionname
-	:
-		TOK_ID                                 #fdecl_funcname_rule
-    ;
+	: TOK_ID                                 #fdecl_funcname_rule ;
 
 type
     returns [Type t]
-    :
-    b = basic_type
-		{
+	: b = basic_type {
             $t = $b.bt;
-        }
-        #basictype_rule
-    |   sequence_type
-        {
+	}
+																		        #basictype_rule
+	| sequence_type {
             System.out.println("Variavel do tipo " + $sequence_type.base + " dimensao "+ $sequence_type.dimension);
-        }
-                                                    #sequencetype_rule
-    ;
+
+	}
+	#sequencetype_rule ;
 
 basic_type
     returns [Type bt]
-    : 'int'
-        {
-            $bt = Type.i;
-        }
-    | 'boolean'
-        {
-            $bt = Type.b;
-        }
-    | 'String'
-        {
-            $bt = Type.s;
-        }
-    | 'float'
-        {
-            $bt = Type.f;
-        }
-   	| 'char'
-   		{
-   			$bt = Type.c;
-   		}
-    ;
-
+	: 'tInteger' {
+            $bt.tInteger = Type.tInteger;
+	}
+	| 'tBoolean' {
+            $bt.tBoolean = Type.tBoolean;
+	}
+	| 'tString' {
+            $bt.tString = Type.tString;
+	}
+	| 'tFloat' {
+            $bt.tFloat = Type.tFloat;
+	}
+	| 'tChar' {
+   			$bt.tChar = Type.tChar;
+	}
+	;
 sequence_type
 returns [int dimension=0, String base]
-    :   basic_type '[]'
-        {
+	: basic_type '[]' {
             $dimension = 1;
             $base = $basic_type.text;
-        }
-
-                                                     #sequencetype_basetype_rule
-    |   s=sequence_type '[]'
-        {
+	}																		                                                     #sequencetype_basetype_rule
+	| s=sequence_type '[]' {
             $dimension = $s.dimension + 1;
             $base = $s.base;
-        }
-                                                     #sequencetype_sequence_rule
-    ;
-
+	}
+																		                                                     #sequencetype_sequence_rule ;
 funcbody
     returns[Object obj]
-    :
-        ifexpr                                       #fbody_if_rule
-    |   letexpr                                      #fbody_let_rule
-    ;
-
-interprete
-	:
-	m = metaexpr
-        {
+    @after{
+	if($obj != null)
+		System.out.println($obj.toString());
+	else
+		System.out.println("Nada que imprimir");
+	}
+	: ifexpr                                       #fbody_if_rule
+	| letexpr                                      #fbody_let_rule
+	| m = metaexpr
+	{
             System.out.println("Comecando o programa");
-            if( $m.me == Type.i)
+            System.out.println($m.me + "______________________");
+            if( $m.me.equals("i"))
             {
                 System.out.println("Expressao inteira");
             } 
-            if( $m.me == Type.f)
+            if( $m.me.equals("f"))
             {
                 System.out.println("Expressao float");
             } 
-            if( $m.me == Type.s)
+            if( $m.me.equals("s"))
             {
                 System.out.println("Expressao string");
             } 
-            if( $m.me == Type.b)
+            if( $m.me.equals("b"))
             {
                 System.out.println("Expressao booleana");
             }
-        }
-      #fbody_expr_rule
-	;
+       }
+		#fbody_expr_rule
+		;
+
 ifexpr
-    : 'if' funcbody 'then' funcbody 'else' funcbody  #ifexpression_rule
-    ;
+	: 'if' funcbody 'then' funcbody 'else' funcbody  #ifexpression_rule ;
 
 letexpr
-    : 'let' letlist 'in' funcbody                    #letexpression_rule
-    ;
+	: 'let' letlist 'in' funcbody                    #letexpression_rule ;
 
 letlist
-    : letvarexpr  letlist_cont                       #letlist_rule
-    ;
+	: letvarexpr  letlist_cont                       #letlist_rule ;
 
 letlist_cont
-    : ',' letvarexpr letlist_cont                    #letlist_cont_rule
-    |                                                #letlist_cont_end
-    ;
+	: ',' letvarexpr letlist_cont                    #letlist_cont_rule
+	| #letlist_cont_end ;
 
 letvarexpr
-    :    symbol '=' funcbody                         #letvarattr_rule
-    |    '_'    '=' funcbody                         #letvarresult_ignore_rule
-    |    symbol '::' symbol '=' funcbody             #letunpack_rule
-    ;
+	: symbol '=' funcbody                         #letvarattr_rule
+	| '_'    '=' funcbody                         #letvarresult_ignore_rule
+	| symbol '::' symbol '=' funcbody             #letunpack_rule ;
 
 metaexpr
-    returns [Type me]
-    : '(' funcbody ')'                               #me_exprparens_rule     // Anything in parenthesis -- if, let, funcion call, etc
-    | sequence_expr                                  #me_list_create_rule    // creates a list [x]
-    | TOK_NEG s = symbol
-    {
-    	if( $s.s == Type.s )
+    returns [String me]
+	: '(' funcbody ')'
+	{
+    	System.out.println("Utilizando parentesis");
+	}
+		#me_exprparens_rule     // Anything in parenthesis -- if, let, funcion call, etc
+	| sequence_expr
+	{
+
+	}
+		#me_list_create_rule    // creates a list [x]
+	| TOK_NEG s = symbol {
+		System.out.println("Token Negacion =====> #me_boolneg_rule");
+    	if( $s.s.equals(Type.tString))
     	{
-    		$me = Type.s;
+    		$me = Type.tString;
     	}
     	else
     	{
-    		$me = Type.i;
+    		$me = Type.tInteger;
     	}
-    }
-    	#me_boolneg_rule        // Negate a variable
-    | TOK_NEG '(' funcbody ')'
+	}
+		#me_boolneg_rule        // Negate a variable
+	| TOK_NEG '(' funcbody ')'{
+			System.out.println("Negacion ( ) =====> #me_boolnegparens_rule");
+		}
     	#me_boolnegparens_rule  //        or anything in between ( )
-    | d=metaexpr TOK_POWER e=metaexpr
-    {
-        if( $d.me == Type.s || $e.me == Type.s)
+	| d=metaexpr TOK_POWER e=metaexpr {
+    	System.out.println("Exponenciacion =====> #me_exprpower_rule");
+        if( $d.me.equals(Type.tString) || $e.me.equals(Type.tString))
         {
         	System.out.println("ERRO");
         }
-        else if($d.me == Type.f || $d.me == Type.f)
+        else if($d.me.equals(Type.tFloat) || $d.me.equals(Type.tFloat))
         {
-            $me = Type.f;
+            $me = Type.tFloat;
         }
         else
         {
-            $me = Type.i;
+            $me = Type.tInteger;
         }
-    }
-        #me_exprpower_rule      // Exponentiation
-    | e=metaexpr TOK_CONCAT d=metaexpr
-    {
-        if($e.me == Type.s || $d.me == Type.s)
+	}
+		#me_exprpower_rule      // Exponentiation
+	| e=metaexpr TOK_CONCAT d=metaexpr {
+		System.out.println("Concatencacion =====> #me_listconcat_rule");
+        if($e.me.equals(Type.tString) || $d.me.equals(Type.tString))
         {
-            $me = Type.s;
+            $me = Type.tString;
         }
         else
         {
             System.out.println("ERRO");
 		}
-    }
-        #me_listconcat_rule     // Sequence concatenation
-    | e=metaexpr TOK_DIV_OR_MUL d=metaexpr
-        {
-            if($d.me == Type.s || $e.me == Type.s)
+	}
+		#me_listconcat_rule     // Sequence concatenation
+	| e=metaexpr TOK_DIV_OR_MUL d=metaexpr {
+			System.out.println("Mul Div =====> #me_exprmuldiv_rule");
+            if($d.me.equals(Type.tString) || $e.me.equals(Type.tString))
             {
                 System.out.println("ERRO");
             }
-            else if($d.me == Type.f || $d.me == Type.f)
+            else if($d.me.equals(Type.tFloat) || $d.me.equals(Type.tFloat))
             {
-                $me = Type.f;
+                $me = Type.tFloat;
             }
             else
             {
-                $me = Type.i;
+                $me = Type.tInteger;
             }
-        }
-        #me_exprmuldiv_rule     // Div and Mult are equal
-    | e=metaexpr TOK_PLUS_OR_MINUS d=metaexpr
-        {
-            if($d.me == Type.s || $e.me == Type.s)
+	}
+		#me_exprmuldiv_rule     // Div and Mult are equal
+	| e=metaexpr TOK_PLUS_OR_MINUS d=metaexpr {
+			System.out.println("Mas Menos =====> #me_exprplusminus_rule");
+            if($d.me.equals(Type.tString) || $e.me.equals(Type.tString))
             {
                 System.out.println("ERRO");
             }
-            else if($d.me == Type.f || $d.me == Type.f)
+            else if($d.me.equals(Type.tFloat) || $d.me.equals(Type.tFloat))
             {
-                $me = Type.f;
+                $me = Type.tFloat;
             }
             else
             {
-                $me = Type.i;
+                $me = Type.tInteger;
             }
+	}
+		#me_exprplusminus_rule  // Sum and Sub are equal
+	| e=metaexpr TOK_CMP_GT_LT d=metaexpr {
+		System.out.println("Boolean grand =====> #me_boolgtlt_rule");
+        if(($e.me != $d.me) || $d.me.equals(Type.tString) || $e.me.equals(Type.tString))
+        {
+    		System.out.println("ERRO");
         }
-        #me_exprplusminus_rule  // Sum and Sub are equal
-    | e=metaexpr TOK_CMP_GT_LT d=metaexpr
+        else{
+        	$me = Type.tBoolean;
+        }
+	}
+		#me_boolgtlt_rule       // < <= >= > are equal
+	| e=metaexpr TOK_CMP_EQ_DIFF d=metaexpr
     {
-        if(($e.me != $d.me) || $d.me == Type.s || $e.me == Type.s)
+		System.out.println("Boolean equals Dif =====> #me_booleqdiff_rule");
+        if(($e.me != $d.me) || $d.me.equals(Type.tString) || $e.me.equals(Type.tString))
         {
     		System.out.println("ERRO");
         }
         else{
-        	$me = Type.b;
+        	$me = Type.tBoolean;
         }
     }
-    	#me_boolgtlt_rule       // < <= >= > are equal
-    | e=metaexpr TOK_CMP_EQ_DIFF d=metaexpr
-    /* {
-        if(($e.me != $d.me) || $d.me == Type.s || $e.me == Type.s)
-        {
-    		System.out.println("ERRO");
-        }
-        else{
-        	$me = Type.b;
-        }
-    } */
     	#me_booleqdiff_rule     // == and != are egual
-    | e=metaexpr TOK_BOOL_AND_OR d=metaexpr
-     {
-        if(($e.me != $d.me) || $d.me == Type.s || $e.me == Type.s)
+	| e=metaexpr TOK_BOOL_AND_OR d=metaexpr {
+    	System.out.println("Boolean =====> #me_boolandor_rule ");
+    	if(($e.me != $d.me) || $d.me.equals(Type.tString) || $e.me.equals(Type.tString))
         {
     		System.out.println("ERRO");
         }
         else{
-        	$me = Type.b;
+        	$me = Type.tBoolean;
         }
-    }
-    	#me_boolandor_rule      // &&   and  ||  are equal
-    | symbol                                         #me_exprsymbol_rule     // a single symbol
-    | literal                                        #me_exprliteral_rule    // literal value
-    | funcall                                        #me_exprfuncall_rule    // a funcion call
-    | c = cast
+	}
+		#me_boolandor_rule      // &&   and  ||  are equal
+	| s = symbol
+	{
+		$me = $s.s;
+		System.out.println("Symbol =====> #me_exprsymbol_rule ");
+	}                                       #me_exprsymbol_rule     // a single symbol
+	| l = literal
+	{
+		$me = $l.l;
+		System.out.println("Literal =====> #me_exprliteral_rule");
+	}                                         #me_exprliteral_rule    // literal value
+	| f =funcall
+	{
+		System.out.println("Funcall  =====> #me_exprfuncall_rule");
+	}                                        #me_exprfuncall_rule    // a funcion call
+	| c = cast
+	{
+		$me = $c.c.toString();
+		System.out.println("Cast =====> #me_exprcast_rule ");
+	}
         #me_exprcast_rule       // cast a type to other
-    ;
+	;
 
 sequence_expr
-    : '[' funcbody ']'                               #se_create_seq
-    ;
+	: '[' funcbody ']'                               #se_create_seq ;
 
-funcall: symbol funcall_params                       #funcall_rule
+funcall
+	: symbol funcall_params                       #funcall_rule
         /*{
             System.Console.WriteLine("Uma chamada de funcao! {0}", $symbol.text);
-        }*/
-    ;
+        }*/ ;
 
 cast
 	returns [Type c]
-    :
-    t=type funcbody
-    {
-    	$c = $t.t;
-    }
-    	#cast_rule
-    ;
+	: t=type funcbody
+	{
+		$c = $t.t;
+	}
+    	#cast_rule ;
 
 funcall_params
-    :   metaexpr funcall_params_cont                    #funcallparams_rule
-    |   '_'                                             #funcallnoparam_rule
-    ;
+	: metaexpr funcall_params_cont                    #funcallparams_rule
+	| '_'                                             #funcallnoparam_rule ;
 
 funcall_params_cont
-    : metaexpr funcall_params_cont                      #funcall_params_cont_rule
-    |                                                   #funcall_params_end_rule
-    ;
+	: metaexpr funcall_params_cont                      #funcall_params_cont_rule
+	| #funcall_params_end_rule ;
 
 literal
-	returns [Type l]
-	:
-        'nil'                                           #literalnil_rule
-    |   'true'
-    {
-		$l = Type.b;
-    }                                     #literaltrue_rule
-    |   n = number
-    {
-		$l = Type.i;
-    }
-    	#literalnumber_rule
-    |   sl = strlit
-    {
-    	$l = Type.s;
-    }
-    	#literalstring_rule
-    |   cl = charlit
-    {
-    	$l = Type.c;
-    }                                         #literal_char_rule
-    ;
+	returns [String l]
+	: 'nil'
+	{
+		System.out.println("Null =====> #literalnil_rule");
+	}
+		#literalnil_rule
+	| 'true'
+	{
+		System.out.println("True =====> #literaltrue_rule");
+		$l = Type.tBoolean;
+	}
+		#literaltrue_rule
+	| number
+	{
+		System.out.println("Number =====> #literalnumber_rule");
+		$l = Type.tFloat;
+	}
+		#literalnumber_rule
+	| strlit
+	{
+		System.out.println("String =====> #literalstring_rule");
+    	$l = Type.tString;
+	}
+		#literalstring_rule
+	| charlit
+	{
+		System.out.println("Char =====> #literal_char_rule");
+    	$l = Type.tChar;
+	}
+		#literal_char_rule
+	;
 
 strlit
-	returns [Type sl]
-	:
-		TOK_STR_LIT
-    ;
+	returns [String sl]
+	: TOK_STR_LIT
+	{
+		$sl = Type.tString;
+	}
+	;
 
 charlit
-	returns [Type cl]
-    :
-    	TOK_CHAR_LIT
-    ;
+	returns [String cl]
+	: TOK_CHAR_LIT
+	{
+		$cl = Type.tChar;
+	}
+	;
 
 number
-	returns [Type n]:
-        FLOAT
-        {
-        	$n = Type.f;
-        }
-        #numberfloat_rule
-    |   DECIMAL
-	    {
-	    	$n = Type.f;
-	    }                                        	    #numberdecimal_rule
-    |   HEXADECIMAL
-    	{
-    		$n = Type.i;
-    	}                                               #numberhexadecimal_rule
-    |   BINARY
-	    {
-	    	$n = Type.i;
-	    }                                               #numberbinary_rule
-      ;
+	returns [String n]
+	: FLOAT {
+        	$n = Type.tFloat;
+	}
+		#numberfloat_rule
+	| DECIMAL {
+	    	$n = Type.tFloat;
+	}
+		#numberdecimal_rule
+	| HEXADECIMAL {
+    		$n = Type.tInteger;
+	}
+		#numberhexadecimal_rule
+	| BINARY {
+	    	$n = Type.tInteger;
+	}
+		#numberbinary_rule ;
 
 symbol
-	returns [Type s]
-	:
-		TOK_ID                                #symbol_rule
-    ;
-
+	returns [String s]
+	: TOK_ID
+	{
+		$s = Type.tString;
+	}
+	    #symbol_rule ;
 
 // id: begins with a letter, follows letters, numbers or underscore
-TOK_ID: [a-zA-Z]([a-zA-Z0-9_]*);
+TOK_ID
+	: [a-zA-Z]([a-zA-Z0-9_]*) ;
 
-TOK_CONCAT: '::' ;
-TOK_NEG: '!';
-TOK_POWER: '^' ;
-TOK_DIV_OR_MUL: ('/'|'*');
-TOK_PLUS_OR_MINUS: ('+'|'-');
-TOK_CMP_GT_LT: ('<='|'>='|'<'|'>');
-TOK_CMP_EQ_DIFF: ('=='|'!=');
-TOK_BOOL_AND_OR: ('&&'|'||');
+TOK_CONCAT
+	: '::' ;
 
-TOK_REL_OP : ('>'|'<'|'=='|'>='|'<=') ;
+TOK_NEG
+	: '!' ;
+
+TOK_POWER
+	: '^' ;
+
+TOK_DIV_OR_MUL
+	: ('/'|'*') ;
+
+TOK_PLUS_OR_MINUS
+	: ('+'|'-') ;
+
+TOK_CMP_GT_LT
+	: ('<='|'>='|'<'|'>') ;
+
+TOK_CMP_EQ_DIFF
+	: ('=='|'!=') ;
+
+TOK_BOOL_AND_OR
+	: ('&&'|'||') ;
+
+TOK_REL_OP
+	: ('>'|'<'|'=='|'>='|'<=') ;
 
 TOK_STR_LIT
-  : '"' (~[\"\\\r\n] | '\\' (. | EOF))* '"'
-  ;
-
+	: '"' (~[\"\\\r\n] | '\\' (. | EOF))* '"' ;
 
 TOK_CHAR_LIT
-    : '\'' (~[\'\n\r\\] | '\\' (. | EOF)) '\''
-    ;
+	: '\'' (~[\'\n\r\\] | '\\' (. | EOF)) '\'' ;
 
-FLOAT : '-'? DEC_DIGIT+ '.' DEC_DIGIT+([eE][\+-]? DEC_DIGIT+)? ;
+FLOAT
+	: '-'? DEC_DIGIT+ '.' DEC_DIGIT+([eE][\+-]? DEC_DIGIT+)? ;
 
-DECIMAL : '-'? DEC_DIGIT+ ;
+DECIMAL
+	: '-'? DEC_DIGIT+ ;
 
-HEXADECIMAL : '0' 'x' HEX_DIGIT+ ;
+HEXADECIMAL
+	: '0' 'x' HEX_DIGIT+ ;
 
-BINARY : BIN_DIGIT+ 'b' ; // Sequencia de digitos seguida de b  10100b
+BINARY
+	: BIN_DIGIT+ 'b' ; // Sequencia de digitos seguida de b  10100b
 
-fragment
-BIN_DIGIT : [01];
+fragment BIN_DIGIT
+	: [01] ;
 
-fragment
-HEX_DIGIT : [0-9A-Fa-f];
+fragment HEX_DIGIT
+	: [0-9A-Fa-f] ;
 
-fragment
-DEC_DIGIT : [0-9] ;
+fragment DEC_DIGIT
+	: [0-9] ;
