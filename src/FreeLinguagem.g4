@@ -72,11 +72,7 @@ functionname
 	: TOK_ID                                 #fdecl_funcname_rule ;
 
 type
-    returns [Type t]
-	: b = basic_type {
-            $t = $b.bt;
-	}
-																		        #basictype_rule
+	: basic_type 																		        #basictype_rule
 	| sequence_type {
             System.out.println("Variavel do tipo " + $sequence_type.base + " dimensao "+ $sequence_type.dimension);
 
@@ -84,21 +80,21 @@ type
 	#sequencetype_rule ;
 
 basic_type
-    returns [Type bt]
-	: 'tInteger' {
-            $bt.tInteger = Type.tInteger;
+    returns [String bt]
+	: 'i' {
+            $bt = Type.tInteger;
 	}
-	| 'tBoolean' {
-            $bt.tBoolean = Type.tBoolean;
+	| 'b' {
+            $bt = Type.tBoolean;
 	}
-	| 'tString' {
-            $bt.tString = Type.tString;
+	| 's' {
+            $bt = Type.tString;
 	}
-	| 'tFloat' {
-            $bt.tFloat = Type.tFloat;
+	| 'f' {
+            $bt = Type.tFloat;
 	}
-	| 'tChar' {
-   			$bt.tChar = Type.tChar;
+	| 'c' {
+   			$bt = Type.tChar;
 	}
 	;
 sequence_type
@@ -114,35 +110,29 @@ returns [int dimension=0, String base]
 																		                                                     #sequencetype_sequence_rule ;
 funcbody
     returns[Object obj]
-    @after{
-	if($obj != null)
-		System.out.println($obj.toString());
-	else
-		System.out.println("Nada que imprimir");
-	}
 	: ifexpr                                       #fbody_if_rule
 	| letexpr                                      #fbody_let_rule
 	| m = metaexpr
 	{
-            System.out.println("Comecando o programa");
-            System.out.println($m.me + "______________________");
+		if($m.me != null){
             if( $m.me.equals("i"))
             {
-                System.out.println("Expressao inteira");
-            } 
+                System.out.println("==============>Expressao inteira<==============");
+            }
             if( $m.me.equals("f"))
             {
-                System.out.println("Expressao float");
-            } 
+                System.out.println("==============>Expressao float<================");
+            }
             if( $m.me.equals("s"))
             {
-                System.out.println("Expressao string");
-            } 
+                System.out.println("==============>Expressao string<===============");
+            }
             if( $m.me.equals("b"))
             {
-                System.out.println("Expressao booleana");
+                System.out.println("==============>Expressao booleana<=============");
             }
        }
+	}
 		#fbody_expr_rule
 		;
 
@@ -176,8 +166,9 @@ metaexpr
 
 	}
 		#me_list_create_rule    // creates a list [x]
-	| TOK_NEG s = symbol {
-		System.out.println("Token Negacion =====> #me_boolneg_rule");
+	| TOK_NEG s = symbol
+	{
+		System.out.println("Token Negacion\t=====>\t#me_boolneg_rule");
     	if( $s.s.equals(Type.tString))
     	{
     		$me = Type.tString;
@@ -189,11 +180,12 @@ metaexpr
 	}
 		#me_boolneg_rule        // Negate a variable
 	| TOK_NEG '(' funcbody ')'{
-			System.out.println("Negacion ( ) =====> #me_boolnegparens_rule");
+			System.out.println("Negacion ( )\t=====>\t#me_boolnegparens_rule");
 		}
     	#me_boolnegparens_rule  //        or anything in between ( )
-	| d=metaexpr TOK_POWER e=metaexpr {
-    	System.out.println("Exponenciacion =====> #me_exprpower_rule");
+	| d=metaexpr TOK_POWER e=metaexpr
+	{
+    	System.out.println("Exponenciacion\t=====>\t#me_exprpower_rule");
         if( $d.me.equals(Type.tString) || $e.me.equals(Type.tString))
         {
         	System.out.println("ERRO");
@@ -208,8 +200,9 @@ metaexpr
         }
 	}
 		#me_exprpower_rule      // Exponentiation
-	| e=metaexpr TOK_CONCAT d=metaexpr {
-		System.out.println("Concatencacion =====> #me_listconcat_rule");
+	| e=metaexpr TOK_CONCAT d=metaexpr
+	{
+		System.out.println("Concatencacion\t=====>\t#me_listconcat_rule");
         if($e.me.equals(Type.tString) || $d.me.equals(Type.tString))
         {
             $me = Type.tString;
@@ -220,10 +213,12 @@ metaexpr
 		}
 	}
 		#me_listconcat_rule     // Sequence concatenation
-	| e=metaexpr TOK_DIV_OR_MUL d=metaexpr {
-			System.out.println("Mul Div =====> #me_exprmuldiv_rule");
+	| e=metaexpr TOK_DIV_OR_MUL d=metaexpr
+	{
+			System.out.println("Mul Div\t=====>\t#me_exprmuldiv_rule");
             if($d.me.equals(Type.tString) || $e.me.equals(Type.tString))
             {
+            	$e.me = null;
                 System.out.println("ERRO");
             }
             else if($d.me.equals(Type.tFloat) || $d.me.equals(Type.tFloat))
@@ -236,26 +231,30 @@ metaexpr
             }
 	}
 		#me_exprmuldiv_rule     // Div and Mult are equal
-	| e=metaexpr TOK_PLUS_OR_MINUS d=metaexpr {
-			System.out.println("Mas Menos =====> #me_exprplusminus_rule");
-            if($d.me.equals(Type.tString) || $e.me.equals(Type.tString))
-            {
-                System.out.println("ERRO");
-            }
-            else if($d.me.equals(Type.tFloat) || $d.me.equals(Type.tFloat))
+	| e=metaexpr TOK_PLUS_OR_MINUS d=metaexpr
+	{
+			System.out.println("Mas Menos\t=====>\t#me_exprplusminus_rule");
+			if($d.me.equals(Type.tFloat) || $d.me.equals(Type.tFloat))
             {
                 $me = Type.tFloat;
             }
+			else if($d.me.equals(Type.tInteger) && $d.me.equals(Type.tInteger))
+            {
+            	$me = Type.tInteger;
+            }
+
             else
             {
-                $me = Type.tInteger;
+            	$e.me = null;
+                System.out.println("ERRO");
             }
 	}
 		#me_exprplusminus_rule  // Sum and Sub are equal
 	| e=metaexpr TOK_CMP_GT_LT d=metaexpr {
-		System.out.println("Boolean grand =====> #me_boolgtlt_rule");
+		System.out.println("Boolean grand\t=====>\t#me_boolgtlt_rule");
         if(($e.me != $d.me) || $d.me.equals(Type.tString) || $e.me.equals(Type.tString))
         {
+        	$e.me = null;
     		System.out.println("ERRO");
         }
         else{
@@ -265,7 +264,7 @@ metaexpr
 		#me_boolgtlt_rule       // < <= >= > are equal
 	| e=metaexpr TOK_CMP_EQ_DIFF d=metaexpr
     {
-		System.out.println("Boolean equals Dif =====> #me_booleqdiff_rule");
+		System.out.println("Boolean equals Dif\t=====>\t#me_booleqdiff_rule");
         if(($e.me != $d.me) || $d.me.equals(Type.tString) || $e.me.equals(Type.tString))
         {
     		System.out.println("ERRO");
@@ -275,10 +274,12 @@ metaexpr
         }
     }
     	#me_booleqdiff_rule     // == and != are egual
-	| e=metaexpr TOK_BOOL_AND_OR d=metaexpr {
-    	System.out.println("Boolean =====> #me_boolandor_rule ");
-    	if(($e.me != $d.me) || $d.me.equals(Type.tString) || $e.me.equals(Type.tString))
+	| e=metaexpr TOK_BOOL_AND_OR d=metaexpr
+	{
+    	System.out.println("Boolean\t=====>\t#me_boolandor_rule ");
+    	if(($e.me != $d.me) && ($d.me.equals(Type.tString) || $e.me.equals(Type.tString)))
         {
+    		$e.me = null;
     		System.out.println("ERRO");
         }
         else{
@@ -288,22 +289,22 @@ metaexpr
 		#me_boolandor_rule      // &&   and  ||  are equal
 	| s = symbol
 	{
+		System.out.println("Symbol\t=====>\t#me_exprsymbol_rule ");
 		$me = $s.s;
-		System.out.println("Symbol =====> #me_exprsymbol_rule ");
 	}                                       #me_exprsymbol_rule     // a single symbol
 	| l = literal
 	{
+		System.out.println("Literal\t=====>\t#me_exprliteral_rule");
 		$me = $l.l;
-		System.out.println("Literal =====> #me_exprliteral_rule");
 	}                                         #me_exprliteral_rule    // literal value
 	| f =funcall
 	{
-		System.out.println("Funcall  =====> #me_exprfuncall_rule");
+		System.out.println("Funcall\t=====>\t#me_exprfuncall_rule");
 	}                                        #me_exprfuncall_rule    // a funcion call
 	| c = cast
 	{
-		$me = $c.c.toString();
-		System.out.println("Cast =====> #me_exprcast_rule ");
+		System.out.println("Cast\t=====>\t#me_exprcast_rule ");
+		$me = $c.c;
 	}
         #me_exprcast_rule       // cast a type to other
 	;
@@ -318,10 +319,10 @@ funcall
         }*/ ;
 
 cast
-	returns [Type c]
+	returns [String c]
 	: t=type funcbody
 	{
-		$c = $t.t;
+		$c = $t.text;
 	}
     	#cast_rule ;
 
@@ -337,30 +338,30 @@ literal
 	returns [String l]
 	: 'nil'
 	{
-		System.out.println("Null =====> #literalnil_rule");
+		System.out.println("Null\t=====>\t#literalnil_rule");
 	}
 		#literalnil_rule
 	| 'true'
 	{
-		System.out.println("True =====> #literaltrue_rule");
+		System.out.println("True\t=====>\t#literaltrue_rule");
 		$l = Type.tBoolean;
 	}
 		#literaltrue_rule
-	| number
+	| n = number
 	{
-		System.out.println("Number =====> #literalnumber_rule");
-		$l = Type.tFloat;
+		System.out.println("Number\t=====>\t#literalnumber_rule");
+		$l = $n.n;
 	}
 		#literalnumber_rule
 	| strlit
 	{
-		System.out.println("String =====> #literalstring_rule");
+		System.out.println("String\t=====>\t#literalstring_rule");
     	$l = Type.tString;
 	}
 		#literalstring_rule
 	| charlit
 	{
-		System.out.println("Char =====> #literal_char_rule");
+		System.out.println("Char\t=====>\t#literal_char_rule");
     	$l = Type.tChar;
 	}
 		#literal_char_rule
@@ -389,11 +390,11 @@ number
 	}
 		#numberfloat_rule
 	| DECIMAL {
-	    	$n = Type.tFloat;
+	    	$n = Type.tInteger;
 	}
 		#numberdecimal_rule
 	| HEXADECIMAL {
-    		$n = Type.tInteger;
+    		$n = Type.tFloat;
 	}
 		#numberhexadecimal_rule
 	| BINARY {
