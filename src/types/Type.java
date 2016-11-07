@@ -2,11 +2,35 @@ package types;
 
 public class Type {
 
-	public static String tInteger = "i";
-	public static String tString = "s";
-	public static String tChar = "c";
-	public static String tDouble = "d";
-	public static String tFloat = "f";
-	public static String tBoolean = "b";
+	public String tInteger = "i";
+	public String tString = "s";
+	public String tChar = "c";
+	public String tDouble = "d";
+	public String tFloat = "f";
+	public String tBoolean = "b";
+
+	public String TypeInteger() {
+		return tInteger;
+	}
+
+	public String TypeString() {
+		return tString;
+	}
+
+	public String TypeChar() {
+		return tChar;
+	}
+
+	public String TypeDouble() {
+		return tDouble;
+	}
+
+	public String TypeFloat() {
+		return tFloat;
+	}
+
+	public String TypeBoolean() {
+		return tBoolean;
+	}
 
 }

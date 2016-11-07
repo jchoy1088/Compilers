@@ -7,6 +7,7 @@ import types.*;
 
 @members {
 	List<String> symbolTable = new ArrayList<String>();
+	Type typ = new Type();
 }
 
 WS
@@ -82,19 +83,19 @@ type
 basic_type
     returns [String bt]
 	: 'i' {
-            $bt = Type.tInteger;
+            $bt = typ.TypeInteger();
 	}
 	| 'b' {
-            $bt = Type.tBoolean;
+            $bt = typ.TypeBoolean();
 	}
 	| 's' {
-            $bt = Type.tString;
+            $bt = typ.TypeString();
 	}
 	| 'f' {
-            $bt = Type.tFloat;
+            $bt = typ.TypeFloat();
 	}
 	| 'c' {
-   			$bt = Type.tChar;
+   			$bt = typ.TypeChar();
 	}
 	;
 sequence_type
@@ -169,13 +170,13 @@ metaexpr
 	| TOK_NEG s = symbol
 	{
 		System.out.println("Token Negacion\t=====>\t#me_boolneg_rule");
-    	if( $s.s.equals(Type.tString))
+    	if( $s.s.equals(typ.TypeString()))
     	{
-    		$me = Type.tString;
+    		$me = typ.TypeString();
     	}
     	else
     	{
-    		$me = Type.tInteger;
+    		$me = typ.TypeInteger();
     	}
 	}
 		#me_boolneg_rule        // Negate a variable
@@ -186,26 +187,26 @@ metaexpr
 	| d=metaexpr TOK_POWER e=metaexpr
 	{
     	System.out.println("Exponenciacion\t=====>\t#me_exprpower_rule");
-        if( $d.me.equals(Type.tString) || $e.me.equals(Type.tString))
+        if( $d.me.equals(typ.TypeString()) || $e.me.equals(typ.TypeString()))
         {
         	System.out.println("ERRO");
         }
-        else if($d.me.equals(Type.tFloat) || $d.me.equals(Type.tFloat))
+        else if($d.me.equals(typ.TypeFloat()) || $d.me.equals(typ.TypeFloat()))
         {
-            $me = Type.tFloat;
+            $me = typ.TypeFloat();
         }
         else
         {
-            $me = Type.tInteger;
+            $me = typ.TypeInteger();
         }
 	}
 		#me_exprpower_rule      // Exponentiation
 	| e=metaexpr TOK_CONCAT d=metaexpr
 	{
 		System.out.println("Concatencacion\t=====>\t#me_listconcat_rule");
-        if($e.me.equals(Type.tString) || $d.me.equals(Type.tString))
+        if($e.me.equals(typ.TypeString()) || $d.me.equals(typ.TypeString()))
         {
-            $me = Type.tString;
+            $me = typ.TypeString();
         }
         else
         {
@@ -216,31 +217,31 @@ metaexpr
 	| e=metaexpr TOK_DIV_OR_MUL d=metaexpr
 	{
 			System.out.println("Mul Div\t=====>\t#me_exprmuldiv_rule");
-            if($d.me.equals(Type.tString) || $e.me.equals(Type.tString))
+            if($d.me.equals(typ.TypeString()) || $e.me.equals(typ.TypeString()))
             {
             	$e.me = null;
                 System.out.println("ERRO");
             }
-            else if($d.me.equals(Type.tFloat) || $d.me.equals(Type.tFloat))
+            else if($d.me.equals(typ.TypeFloat()) || $d.me.equals(typ.TypeFloat()))
             {
-                $me = Type.tFloat;
+                $me = typ.TypeFloat();
             }
             else
             {
-                $me = Type.tInteger;
+                $me = typ.TypeInteger();
             }
 	}
 		#me_exprmuldiv_rule     // Div and Mult are equal
 	| e=metaexpr TOK_PLUS_OR_MINUS d=metaexpr
 	{
 			System.out.println("Mas Menos\t=====>\t#me_exprplusminus_rule");
-			if($d.me.equals(Type.tFloat) || $d.me.equals(Type.tFloat))
+			if($d.me.equals(typ.TypeFloat()) || $d.me.equals(typ.TypeFloat()))
             {
-                $me = Type.tFloat;
+                $me = typ.TypeFloat();
             }
-			else if($d.me.equals(Type.tInteger) && $d.me.equals(Type.tInteger))
+			else if($d.me.equals(typ.TypeInteger()) && $d.me.equals(typ.TypeInteger()))
             {
-            	$me = Type.tInteger;
+            	$me = typ.TypeInteger();
             }
 
             else
@@ -252,38 +253,38 @@ metaexpr
 		#me_exprplusminus_rule  // Sum and Sub are equal
 	| e=metaexpr TOK_CMP_GT_LT d=metaexpr {
 		System.out.println("Boolean grand\t=====>\t#me_boolgtlt_rule");
-        if(($e.me != $d.me) || $d.me.equals(Type.tString) || $e.me.equals(Type.tString))
+        if(($e.me != $d.me) || $d.me.equals(typ.TypeString()) || $e.me.equals(typ.TypeString()))
         {
         	$e.me = null;
     		System.out.println("ERRO");
         }
         else{
-        	$me = Type.tBoolean;
+        	$me = typ.TypeBoolean();
         }
 	}
 		#me_boolgtlt_rule       // < <= >= > are equal
 	| e=metaexpr TOK_CMP_EQ_DIFF d=metaexpr
     {
 		System.out.println("Boolean equals Dif\t=====>\t#me_booleqdiff_rule");
-        if(($e.me != $d.me) || $d.me.equals(Type.tString) || $e.me.equals(Type.tString))
+        if(($e.me != $d.me) || $d.me.equals(typ.TypeString()) || $e.me.equals(typ.TypeString()))
         {
     		System.out.println("ERRO");
         }
         else{
-        	$me = Type.tBoolean;
+        	$me = typ.TypeBoolean();
         }
     }
     	#me_booleqdiff_rule     // == and != are egual
 	| e=metaexpr TOK_BOOL_AND_OR d=metaexpr
 	{
     	System.out.println("Boolean\t=====>\t#me_boolandor_rule ");
-    	if(($e.me != $d.me) && ($d.me.equals(Type.tString) || $e.me.equals(Type.tString)))
+    	if(($e.me != $d.me) && ($d.me.equals(typ.TypeString()) || $e.me.equals(typ.TypeString())))
         {
     		$e.me = null;
     		System.out.println("ERRO");
         }
         else{
-        	$me = Type.tBoolean;
+        	$me = typ.TypeBoolean();
         }
 	}
 		#me_boolandor_rule      // &&   and  ||  are equal
@@ -344,7 +345,7 @@ literal
 	| 'true'
 	{
 		System.out.println("True\t=====>\t#literaltrue_rule");
-		$l = Type.tBoolean;
+		$l = typ.TypeBoolean();
 	}
 		#literaltrue_rule
 	| n = number
@@ -356,13 +357,13 @@ literal
 	| strlit
 	{
 		System.out.println("String\t=====>\t#literalstring_rule");
-    	$l = Type.tString;
+    	$l = typ.TypeString();
 	}
 		#literalstring_rule
 	| charlit
 	{
 		System.out.println("Char\t=====>\t#literal_char_rule");
-    	$l = Type.tChar;
+    	$l = typ.TypeChar();
 	}
 		#literal_char_rule
 	;
@@ -371,7 +372,7 @@ strlit
 	returns [String sl]
 	: TOK_STR_LIT
 	{
-		$sl = Type.tString;
+		$sl = typ.TypeString();
 	}
 	;
 
@@ -379,26 +380,26 @@ charlit
 	returns [String cl]
 	: TOK_CHAR_LIT
 	{
-		$cl = Type.tChar;
+		$cl = typ.TypeChar();
 	}
 	;
 
 number
 	returns [String n]
 	: FLOAT {
-        	$n = Type.tFloat;
+        	$n = typ.TypeFloat();
 	}
 		#numberfloat_rule
 	| DECIMAL {
-	    	$n = Type.tInteger;
+	    	$n = typ.TypeInteger();
 	}
 		#numberdecimal_rule
 	| HEXADECIMAL {
-    		$n = Type.tFloat;
+    		$n = typ.TypeFloat();
 	}
 		#numberhexadecimal_rule
 	| BINARY {
-	    	$n = Type.tInteger;
+	    	$n = typ.TypeInteger();
 	}
 		#numberbinary_rule ;
 
@@ -406,7 +407,7 @@ symbol
 	returns [String s]
 	: TOK_ID
 	{
-		$s = Type.tString;
+		$s = typ.TypeString();
 	}
 	    #symbol_rule ;
 
