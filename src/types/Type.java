@@ -2,12 +2,12 @@ package types;
 
 public class Type {
 
-	public String tInteger = "i";
-	public String tString = "s";
-	public String tChar = "c";
-	public String tDouble = "d";
-	public String tFloat = "f";
-	public String tBoolean = "b";
+	public String tInteger = "int";
+	public String tString = "string";
+	public String tChar = "char";
+	public String tDouble = "double";
+	public String tFloat = "float";
+	public String tBoolean = "boolean";
 
 	public String TypeInteger() {
 		return tInteger;

@@ -19,6 +19,7 @@ public class Interpreter {
 			return;
 		try {
 			FileInputStream fin = new FileInputStream(chooser.getSelectedFile());
+			// FileInputStream("/home/jchoy/ws/ws_compiladores/CompiladoresE1/resources/inputs.txt");
 			FreeLinguagemLexer lexer = new FreeLinguagemLexer(new ANTLRInputStream(fin));
 			CommonTokenStream tokens = new CommonTokenStream(lexer);
 			FreeLinguagemParser parser = new FreeLinguagemParser(tokens);

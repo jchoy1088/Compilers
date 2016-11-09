@@ -52,7 +52,7 @@
 		<echo>[GRUN] :: Please wait... the command is executing</echo>
 		<java fork="true" classname="${grun}">
 			<arg value="FreeLinguagem" />
-			<arg value="interpreter" />
+			<arg value="funcbody" />
 			<arg value="-gui" />
 			<arg value="${build.dir}/../resources/inputs.txt" />
 			<classpath>

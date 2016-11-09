@@ -73,29 +73,45 @@ functionname
 	: TOK_ID                                 #fdecl_funcname_rule ;
 
 type
-	: basic_type 																		        #basictype_rule
+	returns [String t]
+	: bt = basic_type
+	{
+		//System.out.println("Basic Type");
+		$t = $bt.bt;
+	}
+		#basictype_rule
 	| sequence_type {
-            System.out.println("Variavel do tipo " + $sequence_type.base + " dimensao "+ $sequence_type.dimension);
+          //  System.out.println("Variavel do tipo " + $sequence_type.base + " dimensao "+ $sequence_type.dimension);
 
 	}
 	#sequencetype_rule ;
 
 basic_type
     returns [String bt]
-	: 'i' {
-            $bt = typ.TypeInteger();
+	: 'int'
+	{
+    //	System.out.println("INTEGER");
+        $bt = typ.TypeInteger();
 	}
-	| 'b' {
-            $bt = typ.TypeBoolean();
+	| 'boolean'
+	{
+	//	System.out.println("Boolean");
+        $bt = typ.TypeBoolean();
 	}
-	| 's' {
-            $bt = typ.TypeString();
+	| 'str'
+	{
+	//	System.out.println("STRING");
+        $bt = typ.TypeString();
 	}
-	| 'f' {
-            $bt = typ.TypeFloat();
+	| 'float'
+	{
+	//	System.out.println("FLOAT");
+        $bt = typ.TypeFloat();
 	}
-	| 'c' {
-   			$bt = typ.TypeChar();
+	| 'char'
+	{
+	//	System.out.println("CHAR");
+   		$bt = typ.TypeChar();
 	}
 	;
 sequence_type
@@ -110,29 +126,41 @@ returns [int dimension=0, String base]
 	}
 																		                                                     #sequencetype_sequence_rule ;
 funcbody
-    returns[Object obj]
+    returns[String obj]
+    @after
+    {
+        if( $obj == "int")
+        {
+            System.out.println("==============>\tExpressao inteira\t<================");
+        }
+        if( $obj == "float")
+        {
+            System.out.println("==============>\tExpressao float\t\t<================");
+        }
+        if( $obj == "string")
+        {
+            System.out.println("==============>\tExpressao string\t<================");
+        }
+        if( $obj == "boolean")
+        {
+            System.out.println("==============>\tExpressao booleana\t<=============");
+        }
+	}
 	: ifexpr                                       #fbody_if_rule
 	| letexpr                                      #fbody_let_rule
-	| m = metaexpr
+	|
+	{
+    //	System.out.println("Em funcbody -> metaexpr");
+	}
+	m = metaexpr
 	{
 		if($m.me != null){
-            if( $m.me.equals("i"))
-            {
-                System.out.println("==============>Expressao inteira<==============");
-            }
-            if( $m.me.equals("f"))
-            {
-                System.out.println("==============>Expressao float<================");
-            }
-            if( $m.me.equals("s"))
-            {
-                System.out.println("==============>Expressao string<===============");
-            }
-            if( $m.me.equals("b"))
-            {
-                System.out.println("==============>Expressao booleana<=============");
-            }
-       }
+			$obj = $m.me;
+		}
+		else
+		{
+			System.out.println("ERRO DE TIPO. NAO CONTEMPLADO");
+		}
 	}
 		#fbody_expr_rule
 		;
@@ -157,20 +185,22 @@ letvarexpr
 
 metaexpr
     returns [String me]
-	: '(' funcbody ')'
-	{
-    	System.out.println("Utilizando parentesis");
-	}
+	:'(' f=funcbody ')'
+		{
+    		$me = $f.obj;
+		//	System.out.println("Funcbody () ====> #me_exprparens_rule ");
+		}
 		#me_exprparens_rule     // Anything in parenthesis -- if, let, funcion call, etc
 	| sequence_expr
-	{
-
-	}
+		{
+		//	System.out.println("#me_list_create_rule ");
+		}
 		#me_list_create_rule    // creates a list [x]
-	| TOK_NEG s = symbol
+	|
+	TOK_NEG s = symbol
 	{
-		System.out.println("Token Negacion\t=====>\t#me_boolneg_rule");
-    	if( $s.s.equals(typ.TypeString()))
+	//	System.out.println("Token Negacion\t=====>\t#me_boolneg_rule");
+    	if( $s.s == typ.TypeString())
     	{
     		$me = typ.TypeString();
     	}
@@ -180,31 +210,32 @@ metaexpr
     	}
 	}
 		#me_boolneg_rule        // Negate a variable
-	| TOK_NEG '(' funcbody ')'{
-			System.out.println("Negacion ( )\t=====>\t#me_boolnegparens_rule");
-		}
-    	#me_boolnegparens_rule  //        or anything in between ( )
-	| d=metaexpr TOK_POWER e=metaexpr
+	|
+	TOK_NEG '(' funcbody ')'
 	{
-    	System.out.println("Exponenciacion\t=====>\t#me_exprpower_rule");
-        if( $d.me.equals(typ.TypeString()) || $e.me.equals(typ.TypeString()))
+	//		System.out.println("Negacion ( )\t=====>\t#me_boolnegparens_rule");
+	}
+    	#me_boolnegparens_rule  //        or anything in between ( )
+	|
+	d=metaexpr TOK_POWER e=metaexpr
+	{
+    //	System.out.println("Exponenciacion\t=====>\t#me_exprpower_rule");
+        if( $d.me == typ.TypeString() || $e.me == typ.TypeString())
         {
+        	$me = null;
         	System.out.println("ERRO");
-        }
-        else if($d.me.equals(typ.TypeFloat()) || $d.me.equals(typ.TypeFloat()))
-        {
-            $me = typ.TypeFloat();
         }
         else
         {
-            $me = typ.TypeInteger();
+            $me = typ.TypeFloat();
         }
 	}
 		#me_exprpower_rule      // Exponentiation
-	| e=metaexpr TOK_CONCAT d=metaexpr
+	|
+	e=metaexpr TOK_CONCAT d=metaexpr
 	{
-		System.out.println("Concatencacion\t=====>\t#me_listconcat_rule");
-        if($e.me.equals(typ.TypeString()) || $d.me.equals(typ.TypeString()))
+	//	System.out.println("Concatencacion\t=====>\t#me_listconcat_rule");
+        if($e.me == typ.TypeString() || $d.me == typ.TypeString())
         {
             $me = typ.TypeString();
         }
@@ -214,48 +245,51 @@ metaexpr
 		}
 	}
 		#me_listconcat_rule     // Sequence concatenation
-	| e=metaexpr TOK_DIV_OR_MUL d=metaexpr
+	|
+	e=metaexpr TOK_DIV_OR_MUL d=metaexpr
 	{
-			System.out.println("Mul Div\t=====>\t#me_exprmuldiv_rule");
-            if($d.me.equals(typ.TypeString()) || $e.me.equals(typ.TypeString()))
-            {
-            	$e.me = null;
-                System.out.println("ERRO");
-            }
-            else if($d.me.equals(typ.TypeFloat()) || $d.me.equals(typ.TypeFloat()))
-            {
-                $me = typ.TypeFloat();
-            }
-            else
-            {
-                $me = typ.TypeInteger();
-            }
+	//	System.out.println("Mul Div\t=====>\t#me_exprmuldiv_rule");
+        if($e.me == typ.TypeString() || $d.me == typ.TypeString())
+        {
+           	$me = null;
+            System.out.println("ERRO");
+        }
+        else if($e.me == typ.TypeFloat() || $d.me == typ.TypeFloat())
+        {
+            $me = typ.TypeFloat();
+        }
+        else
+        {
+            $me = typ.TypeInteger();
+        }
 	}
 		#me_exprmuldiv_rule     // Div and Mult are equal
-	| e=metaexpr TOK_PLUS_OR_MINUS d=metaexpr
+	|
+	e=metaexpr TOK_PLUS_OR_MINUS d=metaexpr
 	{
-			System.out.println("Mas Menos\t=====>\t#me_exprplusminus_rule");
-			if($d.me.equals(typ.TypeFloat()) || $d.me.equals(typ.TypeFloat()))
-            {
-                $me = typ.TypeFloat();
-            }
-			else if($d.me.equals(typ.TypeInteger()) && $d.me.equals(typ.TypeInteger()))
-            {
-            	$me = typ.TypeInteger();
-            }
-
-            else
-            {
-            	$e.me = null;
-                System.out.println("ERRO");
-            }
+	//	System.out.println("Mas Menos\t=====>\t#me_exprplusminus_rule");
+        if($e.me == typ.TypeString() || $d.me == typ.TypeString())
+        {
+           	$me = null;
+            System.out.println("ERRO");
+        }
+        else if($e.me == typ.TypeFloat() || $d.me == typ.TypeFloat())
+        {
+            $me = typ.TypeFloat();
+        }
+        else
+        {
+            $me = typ.TypeInteger();
+        }
 	}
 		#me_exprplusminus_rule  // Sum and Sub are equal
-	| e=metaexpr TOK_CMP_GT_LT d=metaexpr {
-		System.out.println("Boolean grand\t=====>\t#me_boolgtlt_rule");
-        if(($e.me != $d.me) || $d.me.equals(typ.TypeString()) || $e.me.equals(typ.TypeString()))
+	|
+	e=metaexpr TOK_CMP_GT_LT d=metaexpr
+	{
+	//	System.out.println("Boolean grand\t=====>\t#me_boolgtlt_rule");
+        if($d.me == typ.TypeString() || $e.me == typ.TypeString())
         {
-        	$e.me = null;
+        	$me = null;
     		System.out.println("ERRO");
         }
         else{
@@ -263,24 +297,35 @@ metaexpr
         }
 	}
 		#me_boolgtlt_rule       // < <= >= > are equal
-	| e=metaexpr TOK_CMP_EQ_DIFF d=metaexpr
+	|
+	e=metaexpr TOK_CMP_EQ_DIFF d=metaexpr
     {
-		System.out.println("Boolean equals Dif\t=====>\t#me_booleqdiff_rule");
-        if(($e.me != $d.me) || $d.me.equals(typ.TypeString()) || $e.me.equals(typ.TypeString()))
-        {
-    		System.out.println("ERRO");
-        }
-        else{
-        	$me = typ.TypeBoolean();
-        }
+	//	System.out.println("Boolean equals Dif\t=====>\t#me_booleqdiff_rule");
+	//	try{
+	    	if($e.me == typ.TypeString() || $d.me == typ.TypeString())
+	        {
+	    		$me = null;
+	    		System.out.println("ERRO");
+	        }
+	        else{
+	        	$me = typ.TypeBoolean();
+	        }
+	//    }
+	//	catch(Exception e){
+	//		e.printStackTrace();
+	//	}
+	//	finally{
+	//		System.out.println($me );
+	//	}
     }
     	#me_booleqdiff_rule     // == and != are egual
-	| e=metaexpr TOK_BOOL_AND_OR d=metaexpr
+	|
+	e=metaexpr TOK_BOOL_AND_OR d=metaexpr
 	{
-    	System.out.println("Boolean\t=====>\t#me_boolandor_rule ");
-    	if(($e.me != $d.me) && ($d.me.equals(typ.TypeString()) || $e.me.equals(typ.TypeString())))
+    //    System.out.println("Boolean\t=====>\t#me_boolandor_rule ");
+    	if($e.me == typ.TypeString() || $d.me == typ.TypeString())
         {
-    		$e.me = null;
+    		$me = null;
     		System.out.println("ERRO");
         }
         else{
@@ -288,23 +333,34 @@ metaexpr
         }
 	}
 		#me_boolandor_rule      // &&   and  ||  are equal
-	| s = symbol
+	|
 	{
-		System.out.println("Symbol\t=====>\t#me_exprsymbol_rule ");
+	//	System.out.println("Symbol\t=====>\t#me_exprsymbol_rule ");
+	}
+	s = symbol
+	{
 		$me = $s.s;
 	}                                       #me_exprsymbol_rule     // a single symbol
-	| l = literal
+	|
 	{
-		System.out.println("Literal\t=====>\t#me_exprliteral_rule");
+	//	System.out.println("Literal\t=====>\t#me_exprliteral_rule");
+	}
+	l = literal
+	{
 		$me = $l.l;
 	}                                         #me_exprliteral_rule    // literal value
-	| f =funcall
+	|
+	f = funcall
 	{
-		System.out.println("Funcall\t=====>\t#me_exprfuncall_rule");
-	}                                        #me_exprfuncall_rule    // a funcion call
-	| c = cast
+	//	System.out.println("Funcall\t=====>\t#me_exprfuncall_rule");
+	}
+		#me_exprfuncall_rule    // a funcion call
+	|
 	{
-		System.out.println("Cast\t=====>\t#me_exprcast_rule ");
+	//	System.out.println("Cast\t=====>\t#me_exprcast_rule");
+	}
+	c = cast
+	{
 		$me = $c.c;
 	}
         #me_exprcast_rule       // cast a type to other
@@ -315,15 +371,35 @@ sequence_expr
 
 funcall
 	: symbol funcall_params                       #funcall_rule
+	| symbol metaexpr #funcall_rule2
         /*{
             System.Console.WriteLine("Uma chamada de funcao! {0}", $symbol.text);
         }*/ ;
 
 cast
 	returns [String c]
-	: t=type funcbody
+	:
 	{
-		$c = $t.text;
+	//	System.out.println("CAST =====> #cast_rule");
+	}
+	t=type f=funcbody
+	{
+		$c = $t.t;
+		/*
+		if($t.t == typ.TypeString() || $f.obj == typ.TypeString())
+		{
+			$c = null;
+		}
+		else if($t.t == typ.TypeFloat() || $f.obj == typ.TypeFloat())
+		{
+			$c = typ.TypeFloat();
+		}
+		else
+		{
+			System.out.println($t.t + "_____" + $f.obj);
+			$c = typ.TypeInteger();
+		}*/
+
 	}
     	#cast_rule ;
 
@@ -332,37 +408,52 @@ funcall_params
 	| '_'                                             #funcallnoparam_rule ;
 
 funcall_params_cont
-	: metaexpr funcall_params_cont                      #funcall_params_cont_rule
-	| #funcall_params_end_rule ;
+	: metaexpr funcall_params_cont
+		#funcall_params_cont_rule
+	|
+		#funcall_params_end_rule ;
 
 literal
 	returns [String l]
-	: 'nil'
+	:
 	{
-		System.out.println("Null\t=====>\t#literalnil_rule");
+	//	System.out.println("Null\t=====>\t#literalnil_rule");
 	}
+	'nil'
 		#literalnil_rule
-	| 'true'
+	|
 	{
-		System.out.println("True\t=====>\t#literaltrue_rule");
+	//	System.out.println("True\t=====>\t#literaltrue_rule");
+	}
+	'true'
+	{
 		$l = typ.TypeBoolean();
 	}
 		#literaltrue_rule
-	| n = number
+	|
 	{
-		System.out.println("Number\t=====>\t#literalnumber_rule");
+	//	System.out.println("Number\t=====>\t#literalnumber_rule");
+	}
+	n = number
+	{
 		$l = $n.n;
 	}
 		#literalnumber_rule
-	| strlit
+	|
 	{
-		System.out.println("String\t=====>\t#literalstring_rule");
+	//	System.out.println("String\t=====>\t#literalstring_rule");
+	}
+	strlit
+	{
     	$l = typ.TypeString();
 	}
 		#literalstring_rule
-	| charlit
+	|
 	{
-		System.out.println("Char\t=====>\t#literal_char_rule");
+	//	System.out.println("Char\t=====>\t#literal_char_rule");
+	}
+	charlit
+	{
     	$l = typ.TypeChar();
 	}
 		#literal_char_rule
@@ -386,28 +477,58 @@ charlit
 
 number
 	returns [String n]
-	: FLOAT {
-        	$n = typ.TypeFloat();
+	:
+	{
+	//	System.out.println("NUMBER\t=====>\t#numberfloat_rule");
+	}
+	FLOAT
+	{
+        $n = typ.TypeFloat();
 	}
 		#numberfloat_rule
-	| DECIMAL {
-	    	$n = typ.TypeInteger();
+	|
+	{
+	//	System.out.println("DECIMAL\t=====>\t#numberdecimal_rule");
+	}
+	DECIMAL {
+	    $n = typ.TypeInteger();
 	}
 		#numberdecimal_rule
-	| HEXADECIMAL {
-    		$n = typ.TypeFloat();
+	|
+	{
+	//	System.out.println("HEXADECIMAL\t=====>\t#numberdecimal_rule");
+	}
+	HEXADECIMAL
+	{
+    	$n = typ.TypeInteger();;
 	}
 		#numberhexadecimal_rule
-	| BINARY {
-	    	$n = typ.TypeInteger();
+	|
+	{
+	//	System.out.println("BINARY\t=====>\t#numberbinary_rule");
+	}
+	BINARY
+	{
+	    $n = typ.TypeInteger();
 	}
 		#numberbinary_rule ;
 
 symbol
 	returns [String s]
-	: TOK_ID
+	: tk=TOK_ID
 	{
-		$s = typ.TypeString();
+	//	System.out.println("Symbols===#symbol_rule" + "____" + $tk.text);
+		if($tk.text.equals("i"))
+			$s = typ.TypeInteger();
+		else if($tk.text.equals("s"))
+			$s = typ.TypeString();
+		else if($tk.text.equals("b"))
+			$s = typ.TypeBoolean();
+		else if($tk.text.equals("f"))
+			$s = typ.TypeFloat();
+		else
+			$s = null;
+	//	System.out.println($s);
 	}
 	    #symbol_rule ;
 
