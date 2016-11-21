@@ -1,1 +1,6 @@
-let x = 2.0, y = 2.0, y = 3 in x + y
+let 
+	x = let x = 4, 
+			y = 2.0 
+		in x*y,
+	z = 5
+in x + 1.0

@@ -9,6 +9,7 @@ grammar FreeLinguagem ;
 @members
 	{
 		int contSize = 0;
+		Map<String, String> variaveis = new HashMap<String, String>();
 		NestedSymbolTable<String> nst = new NestedSymbolTable<String>();
 		Type typ = new Type();
 	}
@@ -213,11 +214,14 @@ funcbody
 	{
     	//	System.out.println("Em funcbody -> letexpr");
 	}
-	letexpr
+	lex = letexpr
+	{
+		$obj = $lex.lex;
+	}
 		#fbody_let_rule
 	|
 	{
-		//	System.out.println("Em funcbody -> metaexpr");
+		// System.out.println("Em funcbody -> metaexpr");
 	}
 	m = metaexpr
 	{
@@ -238,33 +242,37 @@ ifexpr
 		#ifexpression_rule ;
 
 letexpr
+returns[String lex]
 	:
 	{
 		/*Se precisa declarar uma variavel do tipo NestedSymbolTable<String>*/
-		//	NestedSymbolTable<String> nst2 = new NestedSymbolTable<String>(nst);
 		//	System.out.println("LETEXPR =======> #letexpression_rule");
+		NestedSymbolTable<String> nstLocal = new NestedSymbolTable<String>(nst);
 	}
-	'let' l = letlist 'in' f = funcbody
+	'let' l = letlist[nstLocal] 'in' f = funcbody
 	{
-    	for (SymbolEntry<String> entry : nst.getEntries())
+		System.out.println("Imprimiendo valores");
+    	for (SymbolEntry<String> entry : nstLocal.getEntries())
     		System.out.println("nst Entry: " + entry);
+    	$lex = $f.obj;
 	}
 		#letexpression_rule
 	;
 
-letlist
+letlist[NestedSymbolTable<String> nstLocal]
 returns [String ll1, String ll2]
-	: lve = letvarexpr  llc = letlist_cont
+	: lve = letvarexpr[nstLocal]  llc = letlist_cont[nstLocal]
 	{
+
 		//	System.out.println("LETLIST RULE\t======>\t#letlist_rule");
 	}
 		#letlist_rule
 	;
 
-letlist_cont
+letlist_cont[NestedSymbolTable<String> nstLocal]
 	returns [String llc]
 	:
-	',' lve = letvarexpr letlist_cont
+	',' lve = letvarexpr[nstLocal] letlist_cont[nstLocal]
 	{
 		//	System.out.println("LETLIST CONT RULE\t======>\t#letlist_cont_rule");
 		$llc = $lve.lve;
@@ -274,15 +282,18 @@ letlist_cont
 		#letlist_cont_end
 	;
 
-letvarexpr
+letvarexpr[NestedSymbolTable<String> nstLocal]
 	returns [String lve]
 	:
 	s = symbol '=' f = funcbody
 	{
-		//	System.out.println("LET VAR EXPRE ATTR\t======>\t#letvarattr_rule");
 
-		if($s.s != null)
-			nst.store($s.s, $s.text + " = " + $f.obj, contSize++);
+		//	System.out.println("LET VAR EXPRE ATTR\t======>\t#letvarattr_rule");
+		if($s.s != null){
+			//System.out.println("Se vai adicionar " + $s.s + " " + $s.text + " = " + $f.obj + " " + contSize);
+			$nstLocal.store($s.text, $s.text + " = " + $f.obj, contSize++);
+			variaveis.put($s.text, $f.obj );
+		}
 	}
 		#letvarattr_rule
 	|
@@ -361,7 +372,7 @@ metaexpr
 	|
 	e=metaexpr TOK_DIV_OR_MUL d=metaexpr
 	{
-		//	System.out.println("Mul Div\t=====>\t#me_exprmuldiv_rule");
+		// System.out.println("Mul Div\t=====>\t#me_exprmuldiv_rule");
         if($e.me == typ.TypeString() || $d.me == typ.TypeString()){
            	$me = null;
             System.out.println("ERRO");
@@ -430,23 +441,9 @@ metaexpr
 	}
 		#me_boolandor_rule      // &&   and  ||  are equal
 	|
-	{
-		//	System.out.println("Symbol\t=====>\t#me_exprsymbol_rule ");
-	}
 	s = symbol
 	{
-		//System.out.println(nst.lookup($s.s) + "****************");
-		//String aux = nst.lookup($s.s);
-		//System.out.println(aux + "***********");
-		if(nst.lookup($s.s) != null)
-			$me = null;
-		//$me = $s.s;
-		/*if( aux != null){
-			$me = aux;
-		}
-		else{
-			$me = $s.s;
-		}*/
+		$me = $s.s;
 	}
 		#me_exprsymbol_rule     // a single symbol
 	|
@@ -643,25 +640,23 @@ symbol
 	:
 	tk=TOK_ID
 	{
-		$s = typ.TypeString();
-		/*
-		if($tk.text.equals("i")){
-			$s = typ.TypeInteger();
-		}
-		else if($tk.text.equals("s")){
+		String aux = variaveis.get($tk.text);
+		if(aux == null)
 			$s = typ.TypeString();
-		}
-		else if($tk.text.equals("b")){
+		else
+			$s = aux;
+
+		/* Isto é da Entrega 4, não tenho certeza se ainda vai ser necessario.
+		if($tk.text.equals("i"))
+			$s = typ.TypeInteger();
+		else if($tk.text.equals("s"))
+			$s = typ.TypeString();
+		else if($tk.text.equals("b"))
 			$s = typ.TypeBoolean();
-		}
-		else if($tk.text.equals("f")){
+		else if($tk.text.equals("f"))
 			$s = typ.TypeFloat();
-		}
-		else{
-			$s = null;
-		}
-		System.out.println($s+"_________ll___"+$tk.text);
-		*/
+		else
+			$s = null;*/
 	}
 		#symbol_rule
 	;

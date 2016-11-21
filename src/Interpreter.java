@@ -12,14 +12,14 @@ public class Interpreter {
 	public static void main(String args[]) {
 
 		// ou recebe como argumento, depende de como preferir executar
-		//JFileChooser chooser = new JFileChooser();
-		//chooser.setFileFilter(new FileNameExtensionFilter("Text File", "txt"));
-		//int retval = chooser.showOpenDialog(null);
-		//if (retval != JFileChooser.APPROVE_OPTION)
-		//	return;
+		JFileChooser chooser = new JFileChooser();
+		chooser.setFileFilter(new FileNameExtensionFilter("Text File", "txt"));
+		int retval = chooser.showOpenDialog(null);
+		if (retval != JFileChooser.APPROVE_OPTION)
+			return;
 		try {
-			//	FileInputStream fin = new FileInputStream(chooser.getSelectedFile());
-			FileInputStream fin = new FileInputStream("/home/jchoy/ws/ws_compiladores/CompiladoresE1/resources/inputs.txt");
+			FileInputStream fin = new FileInputStream(chooser.getSelectedFile());
+			//FileInputStream fin = new FileInputStream("/home/jchoy/ws/ws_compiladores/CompiladoresE1/resources/inputs.txt");
 			FreeLinguagemLexer lexer = new FreeLinguagemLexer(new ANTLRInputStream(fin));
 			CommonTokenStream tokens = new CommonTokenStream(lexer);
 			FreeLinguagemParser parser = new FreeLinguagemParser(tokens);
