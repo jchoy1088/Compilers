@@ -9,6 +9,7 @@ grammar FreeLinguagem ;
 @members
 	{
 		int contSize = 0;
+		int cantNst = 0;
 		Map<String, String> variaveis = new HashMap<String, String>();
 		NestedSymbolTable<String> nst = new NestedSymbolTable<String>();
 		Type typ = new Type();
@@ -251,9 +252,11 @@ returns[String lex]
 	}
 	'let' l = letlist[nstLocal] 'in' f = funcbody
 	{
-		System.out.println("Imprimiendo valores");
+		cantNst++;
+		System.out.println("Imprimiendo valores do NST N° " + cantNst);
+		int cont = 1;
     	for (SymbolEntry<String> entry : nstLocal.getEntries())
-    		System.out.println("nst Entry: " + entry);
+    		System.out.println("Elemento " + cont++ +": " + entry);
     	$lex = $f.obj;
 	}
 		#letexpression_rule
