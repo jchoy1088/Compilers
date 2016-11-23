@@ -1,7 +1,0 @@
-Buildfile: /home/jchoy/ws/ws_compiladores/CompiladoresE1/build.xml
-
-generate:
-     [echo] [GENERATE] :: Generating the lexer and parser...
-
-BUILD SUCCESSFUL
-Total time: 2 seconds

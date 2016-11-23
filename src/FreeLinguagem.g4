@@ -8,10 +8,7 @@ grammar FreeLinguagem ;
 
 @members
 	{
-		int contSize = 0;
-		int cantNst = 0;
-		Map<String, String> variaveis = new HashMap<String, String>();
-		NestedSymbolTable<String> nst = new NestedSymbolTable<String>();
+		NestedSymbolTable<String> nstMain = new NestedSymbolTable<String>();
 		Type typ = new Type();
 	}
 
@@ -112,8 +109,6 @@ type
 	:
 	bt = basic_type
 	{
-		//System.out.println("Basic Type");
-		NestedSymbolTable<String> nst = new NestedSymbolTable<String>();
 		$t = $bt.bt;
 	}
 		#basictype_rule
@@ -176,38 +171,9 @@ returns [int dimension=0, String base]
 		#sequencetype_sequence_rule
 	;
 
-interpreter
-@ after
-	{
-		for (SymbolEntry<String> entry : nst.getEntries()){
-			System.out.println("nst Entry: " + entry);
-		}
-	}
-	:
-		funcbody
-	;
 
 funcbody
-    returns[String obj]
-@ after
-	{
-		/*
-        if( $obj == "int"){
-            System.out.println("==============>\tExpressao inteira\t<================");
-        }
-        if( $obj == "float"){
-            System.out.println("==============>\tExpressao float\t\t<================");
-        }
-        if( $obj == "string"){
-            System.out.println("==============>\tExpressao string\t<================");
-        }
-        if( $obj == "boolean"){
-            System.out.println("==============>\tExpressao booleana\t<=============");
-        }
-        */
-        /*System.out.println(nst.getSize());*/
-
-	}
+    returns[String f]
 	:
 	ifexpr
 		#fbody_if_rule
@@ -217,7 +183,7 @@ funcbody
 	}
 	lex = letexpr
 	{
-		$obj = $lex.lex;
+		$f = $lex.lex;
 	}
 		#fbody_let_rule
 	|
@@ -226,11 +192,12 @@ funcbody
 	}
 	m = metaexpr
 	{
-		if($m.me != null){
-			$obj = $m.me;
-		}
-		else{
-			System.out.println("ERRO DE TIPO. NAO CONTEMPLADO");
+		$f = $m.me;
+		if(nstMain.getCount() > 0){
+			for (SymbolEntry<String> entry : nstMain.getEntries()){
+				System.out.println("=====> " + entry);
+			}
+			System.out.println("====================================================================");
 		}
 	}
 		#fbody_expr_rule ;
@@ -246,69 +213,84 @@ letexpr
 returns[String lex]
 	:
 	{
-		/*Se precisa declarar uma variavel do tipo NestedSymbolTable<String>*/
-		//	System.out.println("LETEXPR =======> #letexpression_rule");
-		NestedSymbolTable<String> nstLocal = new NestedSymbolTable<String>(nst);
 	}
-	'let' l = letlist[nstLocal] 'in' f = funcbody
+	'let' l = letlist 'in'
+	f = funcbody
 	{
-		cantNst++;
-		System.out.println("Imprimiendo valores do NST N° " + cantNst);
-		int cont = 1;
-    	for (SymbolEntry<String> entry : nstLocal.getEntries())
-    		System.out.println("Elemento " + cont++ +": " + entry);
-    	$lex = $f.obj;
+		nstMain = nstMain.getParent();
+		$lex = $f.f;
 	}
 		#letexpression_rule
 	;
 
-letlist[NestedSymbolTable<String> nstLocal]
-returns [String ll1, String ll2]
-	: lve = letvarexpr[nstLocal]  llc = letlist_cont[nstLocal]
+letlist
+returns [NestedSymbolTable<String> nstLocal]
+@init{
+		$nstLocal = new NestedSymbolTable<String>(nstMain);
+		nstMain = $nstLocal;
+	}
+	:
+	lve = letvarexpr
 	{
-
-		//	System.out.println("LETLIST RULE\t======>\t#letlist_rule");
+		$nstLocal.store($lve.lve1, $lve.lve2);
+	}
+	llc = letlist_cont[$nstLocal]
+	{
 	}
 		#letlist_rule
 	;
 
-letlist_cont[NestedSymbolTable<String> nstLocal]
-	returns [String llc]
+	letlist_cont[NestedSymbolTable<String> nstLocal]
 	:
-	',' lve = letvarexpr[nstLocal] letlist_cont[nstLocal]
 	{
 		//	System.out.println("LETLIST CONT RULE\t======>\t#letlist_cont_rule");
-		$llc = $lve.lve;
+	}
+	',' lve = letvarexpr
+	{
+		$nstLocal.store($lve.lve1, $lve.lve2);
+	}
+	letlist_cont[$nstLocal]
+	{
+
 	}
 		#letlist_cont_rule
 	|
 		#letlist_cont_end
 	;
 
-letvarexpr[NestedSymbolTable<String> nstLocal]
-	returns [String lve]
+letvarexpr
+	returns [String lve1, String lve2]
 	:
-	s = symbol '=' f = funcbody
 	{
-
-		//	System.out.println("LET VAR EXPRE ATTR\t======>\t#letvarattr_rule");
-		if($s.s != null){
-			//System.out.println("Se vai adicionar " + $s.s + " " + $s.text + " = " + $f.obj + " " + contSize);
-			$nstLocal.store($s.text, $s.text + " = " + $f.obj, contSize++);
-			variaveis.put($s.text, $f.obj );
-		}
+		//	System.out.println("LET VAR RES IGNORE\t======>\t#letvarresult_ignore_rule");
+	}
+	s = symbol
+	{
+		$lve1 = $s.s;
+	}
+	'=' f = funcbody
+	{
+		$lve2 = $f.f;
 	}
 		#letvarattr_rule
 	|
 	'_'   '=' f = funcbody
 	{
-		//	System.out.println("LET VAR RES IGNORE\t======>\t#letvarresult_ignore_rule");
+		$lve1 = "_";
+		$lve2 = $f.f;
 	}
 		#letvarresult_ignore_rule
 	|
-	se = symbol '::' sd = symbol '=' f = funcbody
 	{
 		//	System.out.println("LET UNPACK\t======>\t#letunpack_rule");
+	}
+	se = symbol '::' sd = symbol
+	{
+		$lve1 = $se.text + $sd.text;
+	}
+	'=' f = funcbody
+	{
+		$lve2 = $f.f;
 	}
 		#letunpack_rule
 	;
@@ -318,7 +300,7 @@ metaexpr
 	:
 	'(' f=funcbody ')'
 	{
-    	$me = $f.obj;
+    	$me = $f.f;
 		//	System.out.println("Funcbody () ====> #me_exprparens_rule ");
 	}
 		#me_exprparens_rule     // Anything in parenthesis -- if, let, funcion call, etc
@@ -363,8 +345,8 @@ metaexpr
 	|
 	e=metaexpr TOK_CONCAT d=metaexpr
 	{
-		System.out.println("Concatencacion\t=====>\t#me_listconcat_rule "+$e.me  + $d.me);
-        if($e.me == typ.TypeString() || $d.me == typ.TypeString()){
+		//	System.out.println("Concatenacion\t=====>\t#me_listconcat_rule "+$e.me + " // " + $d.me);
+        if($e.me != null && $d.me != null){
             $me = typ.TypeString();
         }
         else{
@@ -446,7 +428,13 @@ metaexpr
 	|
 	s = symbol
 	{
-		$me = $s.s;
+		if(nstMain.lookup($s.text) != null){
+			$me = nstMain.lookup($s.text).symbol;
+		}
+		else{
+			$me = typ.TypeString();
+		}
+
 	}
 		#me_exprsymbol_rule     // a single symbol
 	|
@@ -504,10 +492,10 @@ cast
 	{
 		$c = $t.t;
 		/*
-		if($t.t == typ.TypeString() || $f.obj == typ.TypeString()){
+		if($t.t == typ.TypeString() || $f.f == typ.TypeString()){
 			$c = null;
 		}
-		else if($t.t == typ.TypeFloat() || $f.obj == typ.TypeFloat()){
+		else if($t.t == typ.TypeFloat() || $f.f == typ.TypeFloat()){
 			$c = typ.TypeFloat();
 		}
 		else{
@@ -544,7 +532,7 @@ literal
 		#literalnil_rule
 	|
 	{
-		System.out.println("True\t=====>\t#literaltrue_rule");
+		//	System.out.println("True\t=====>\t#literaltrue_rule");
 	}
 	'true'
 	{
@@ -564,14 +552,14 @@ literal
 	{
 		//	System.out.println("String\t=====>\t#literalstring_rule");
 	}
-	strlit
+	str = strlit
 	{
-		$l = typ.TypeString();
+		$l = $str.str;
 	}
 		#literalstring_rule
 	|
 	{
-		System.out.println("Char\t=====>\t#literal_char_rule");
+		//	System.out.println("Char\t=====>\t#literal_char_rule");
 	}
 	charlit
 	{
@@ -581,11 +569,12 @@ literal
 	;
 
 strlit
-	returns [String sl]
+	returns [String str]
 	:
 	TOK_STR_LIT
 	{
-		$sl = typ.TypeString();
+		$str = typ.TypeString();
+		//	System.out.println($str + "_________");
 	}
 	;
 
@@ -643,23 +632,7 @@ symbol
 	:
 	tk=TOK_ID
 	{
-		String aux = variaveis.get($tk.text);
-		if(aux == null)
-			$s = typ.TypeString();
-		else
-			$s = aux;
-
-		/* Isto é da Entrega 4, não tenho certeza se ainda vai ser necessario.
-		if($tk.text.equals("i"))
-			$s = typ.TypeInteger();
-		else if($tk.text.equals("s"))
-			$s = typ.TypeString();
-		else if($tk.text.equals("b"))
-			$s = typ.TypeBoolean();
-		else if($tk.text.equals("f"))
-			$s = typ.TypeFloat();
-		else
-			$s = null;*/
+		$s = $tk.text;
 	}
 		#symbol_rule
 	;

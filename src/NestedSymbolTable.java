@@ -4,15 +4,17 @@ class SymbolEntry<T> {
 	public T symbol;
 	public int offset;
 	public int size;
+	public String nomeVariavel;
 
-	public SymbolEntry(T symbol, int offset, int size) {
+	public SymbolEntry(String nomeVariavel,T symbol, int offset, int size) {
+		this.nomeVariavel = nomeVariavel;
 		this.symbol = symbol;
 		this.offset = offset;
 		this.size = size;
 	}
 
 	public String toString() {
-		return "Entry at " + offset + ", size " + size + " value: " + symbol;
+		return "variavel: "+nomeVariavel+"\t| posicao: " + offset + "\t| tamanho: " + size + "\t| valor: " + symbol;
 	}
 }
 
@@ -147,7 +149,7 @@ public class NestedSymbolTable<T> {
 		this.size += size;
 		this.nextOffset += size;
 
-		storage.put(name, new SymbolEntry<T>(symbol, symbolOffset, size));
+		storage.put(name, new SymbolEntry<T>(name, symbol, symbolOffset, size));
 
 		return symbolOffset;
 	}

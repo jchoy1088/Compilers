@@ -1,6 +1,11 @@
 let 
-	x = let x = 4, 
-			y = 2.0 
-		in x*y,
-	z = 5
-in x + 1.0
+	a = let d = let g = 5,
+					h = 3.0,
+					i = 1b
+				in i,	 
+			e = 2.0,
+			f = eeee
+		in f::aaaa,
+	b = 5,
+	c = 10
+in b + 1
