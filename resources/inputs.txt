@@ -1,11 +1,6 @@
-let 
-	a = let d = let g = 5,
-					h = 3.0,
-					i = 1b
-				in i,	 
-			e = 2.0,
-			f = eeee
-		in f::aaaa,
-	b = 5,
-	c = 10
-in b + 1
+let x = let s1 = "inicio",
+			s2 = "fim"
+in
+s1 :: (str 1000) :: s2
+in
+	"Resultado: " :: x

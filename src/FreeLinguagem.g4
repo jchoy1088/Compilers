@@ -8,7 +8,9 @@ grammar FreeLinguagem ;
 
 @members
 	{
-		NestedSymbolTable<String> nstMain = new NestedSymbolTable<String>();
+		NestedSymbolTable<String> nstMainVariaveis = new NestedSymbolTable<String>();
+		NestedSymbolTable<Object> nstMainValues = new NestedSymbolTable<Object>();
+		Stack<Object> pilha = new Stack<Object>();
 		Type typ = new Type();
 	}
 
@@ -173,7 +175,13 @@ returns [int dimension=0, String base]
 
 
 funcbody
-    returns[String f]
+    returns[String f, String value]
+@after{
+
+	if(pilha.size() > 0 ){
+		//System.out.println(pilha.pop());
+	}
+}
 	:
 	ifexpr
 		#fbody_if_rule
@@ -192,13 +200,24 @@ funcbody
 	}
 	m = metaexpr
 	{
+		$value = $m.value;
 		$f = $m.me;
-		if(nstMain.getCount() > 0){
-			for (SymbolEntry<String> entry : nstMain.getEntries()){
-				System.out.println("=====> " + entry);
+		/*System.out.println($m.text + "+++++++++++++++++++++++");
+		if(nstMainVariaveis.getCount() > 0){
+			for (SymbolEntry<String> entry : nstMainVariaveis.getEntries()){
+				System.out.println("Variaveis =====> " + entry);
 			}
 			System.out.println("====================================================================");
 		}
+		if(nstMainValues.getCount() > 0){
+			for (SymbolEntry<Object> entry : nstMainValues.getEntries()){
+				System.out.println("Values =====> " + entry);
+			}
+			System.out.println("====================================================================");
+		}*/
+		if(pilha.size() > 0)
+			for(int i = 0; i < pilha.size(); i++)
+				System.out.println(pilha.get(i) + "**********************");
 	}
 		#fbody_expr_rule ;
 
@@ -217,39 +236,45 @@ returns[String lex]
 	'let' l = letlist 'in'
 	f = funcbody
 	{
-		nstMain = nstMain.getParent();
+		nstMainVariaveis = nstMainVariaveis.getParent();
+		nstMainValues = nstMainValues.getParent();
 		$lex = $f.f;
 	}
 		#letexpression_rule
 	;
 
 letlist
-returns [NestedSymbolTable<String> nstLocal]
+returns [NestedSymbolTable<String> nstLocal, NestedSymbolTable<Object> nstLocalValues]
 @init{
-		$nstLocal = new NestedSymbolTable<String>(nstMain);
-		nstMain = $nstLocal;
+		$nstLocal = new NestedSymbolTable<String>(nstMainVariaveis);
+		$nstLocalValues = new NestedSymbolTable<Object>(nstMainValues);
+		nstMainVariaveis = $nstLocal;
+		nstMainValues = $nstLocalValues;
 	}
 	:
 	lve = letvarexpr
 	{
 		$nstLocal.store($lve.lve1, $lve.lve2);
+		$nstLocalValues.store($lve.lve1,$lve.value);
 	}
-	llc = letlist_cont[$nstLocal]
+	llc = letlist_cont[$nstLocal, $nstLocalValues]
 	{
 	}
 		#letlist_rule
 	;
 
-	letlist_cont[NestedSymbolTable<String> nstLocal]
+	letlist_cont[NestedSymbolTable<String> nstLocal, NestedSymbolTable<Object> nstLocalValues]
 	:
 	{
 		//	System.out.println("LETLIST CONT RULE\t======>\t#letlist_cont_rule");
 	}
 	',' lve = letvarexpr
 	{
+
 		$nstLocal.store($lve.lve1, $lve.lve2);
+		$nstLocalValues.store($lve.lve1,$lve.value);
 	}
-	letlist_cont[$nstLocal]
+	letlist_cont[$nstLocal, $nstLocalValues]
 	{
 
 	}
@@ -259,7 +284,7 @@ returns [NestedSymbolTable<String> nstLocal]
 	;
 
 letvarexpr
-	returns [String lve1, String lve2]
+	returns [String lve1, String lve2, String value]
 	:
 	{
 		//	System.out.println("LET VAR RES IGNORE\t======>\t#letvarresult_ignore_rule");
@@ -271,6 +296,7 @@ letvarexpr
 	'=' f = funcbody
 	{
 		$lve2 = $f.f;
+		$value = $f.text;
 	}
 		#letvarattr_rule
 	|
@@ -296,11 +322,13 @@ letvarexpr
 	;
 
 metaexpr
-    returns [String me]
+    returns [String me, String value]
 	:
 	'(' f=funcbody ')'
 	{
     	$me = $f.f;
+    	$value = $f.value;
+    	//	System.out.println($f.f + " / " + $f.text);
 		//	System.out.println("Funcbody () ====> #me_exprparens_rule ");
 	}
 		#me_exprparens_rule     // Anything in parenthesis -- if, let, funcion call, etc
@@ -347,15 +375,53 @@ metaexpr
 	{
 		//	System.out.println("Concatenacion\t=====>\t#me_listconcat_rule "+$e.me + " // " + $d.me);
         if($e.me != null && $d.me != null){
+        	System.out.println("CONCATENANDO");
+        	/*System.out.println($d.text + " / " + $d.me + " / " + $d.value + " / " + $e.text + " / " + $e.me + " / " + $e.value);
+        	if(nstMainValues.lookup($e.text) != null){
+        		System.out.println("PUSHANDO NA PILHA === " + nstMainValues.lookup($e.text).symbol.toString());
+        		pilha.push(nstMainValues.lookup($e.text).symbol.toString());
+        	}
+        	else if($e.value != null){
+        		System.out.println("PUSHANDO NA PILHA NULL === " + $e.value);
+				pilha.push($e.value);
+			}
+        	else{
+        	}
+        	if(nstMainValues.lookup($d.text) != null){
+        		System.out.println("PUSHANDO NA PILHA === " + nstMainValues.lookup($d.text).symbol.toString());
+        		pilha.push(nstMainValues.lookup($d.text).symbol.toString());
+        	}
+        	else if($d.value != null){
+        		System.out.println("PUSHANDO NA PILHA NULL === " + $d.value);
+        		pilha.push($d.value);
+        	}
+        	else{
+        	}
+        	for(Object o : pilha){
+        		System.out.println("Imprimiendo da pilha");
+        		System.out.println(o);
+        	}*/
+        	System.out.println(pilha.size());
+			String v2 = (String)pilha.pop();
+        	String v1 = (String)pilha.pop();
+        	String v3 = v1 + v2;
+        	//System.out.println(v1+" - "+ v2 +" - "+ v3 );
+        	pilha.push( v3 );
+        	/*System.out.println("==========================================");
+        	for(Object o : pilha){
+        		System.out.println("Imprimiendo da pilha");
+        		System.out.println(o + "-----");
+        	}*/
             $me = typ.TypeString();
         }
         else{
+        	System.out.println("CONCATENACAO");
             System.out.println("ERRO");
 		}
 	}
 		#me_listconcat_rule     // Sequence concatenation
 	|
-	e=metaexpr TOK_DIV_OR_MUL d=metaexpr
+	e=metaexpr tk = TOK_DIV_OR_MUL d=metaexpr
 	{
 		// System.out.println("Mul Div\t=====>\t#me_exprmuldiv_rule");
         if($e.me == typ.TypeString() || $d.me == typ.TypeString()){
@@ -366,12 +432,19 @@ metaexpr
             $me = typ.TypeFloat();
         }
         else{
+        	System.out.println("MULTIPLICANDO"+ pilha.size());
+        	Integer v1 = Integer.parseInt(pilha.pop().toString());
+        	Integer v2 = Integer.parseInt(pilha.pop().toString());
+        	if($tk.text.equals("*"))
+        		pilha.push(new Integer(v1 * v2));
+        	if($tk.text.equals("/"))
+        		pilha.push(new Integer(v1 / v2));
             $me = typ.TypeInteger();
         }
 	}
 		#me_exprmuldiv_rule     // Div and Mult are equal
 	|
-	e=metaexpr TOK_PLUS_OR_MINUS d=metaexpr
+	e=metaexpr tk = TOK_PLUS_OR_MINUS d=metaexpr
 	{
 		//	System.out.println("Mas Menos\t=====>\t#me_exprplusminus_rule");
         if($e.me == typ.TypeString() || $d.me == typ.TypeString()){
@@ -382,6 +455,14 @@ metaexpr
             $me = typ.TypeFloat();
         }
         else{
+        	System.out.println("SUMANDO" + pilha.size());
+			Integer v1 = Integer.parseInt(pilha.pop().toString());
+        	Integer v2 = Integer.parseInt(pilha.pop().toString());
+        	if($tk.text.equals("+"))
+        		pilha.push(new Integer(v1 + v2));
+        	if($tk.text.equals("-"))
+        		pilha.push(new Integer(v1 - v2));
+        	System.out.println("TERMINO SUMANDO");
             $me = typ.TypeInteger();
         }
 	}
@@ -428,8 +509,9 @@ metaexpr
 	|
 	s = symbol
 	{
-		if(nstMain.lookup($s.text) != null){
-			$me = nstMain.lookup($s.text).symbol;
+		if(nstMainValues.lookup($s.text) != null){
+			pilha.push(nstMainValues.lookup($s.text).symbol);
+			$me = nstMainVariaveis.lookup($s.text).symbol;
 		}
 		else{
 			$me = typ.TypeString();
@@ -443,8 +525,16 @@ metaexpr
 	}
 	l = literal
 	{
-		//	System.out.println("Expressao literal\t======>\t#me_exprliteral_rule ");
-		$me = $l.l;
+		System.out.println("Expressao literal\t======>\t#me_exprliteral_rule ");
+		System.out.println($l.text + pilha.size());
+		if(nstMainValues.lookup($l.text) != null){
+			System.out.println("PUSHANDO_ "+nstMainValues.lookup($l.text).symbol);
+			pilha.push(nstMainValues.lookup($l.text).symbol);
+			$me = nstMainVariaveis.lookup($l.text).symbol;
+		}
+		else{
+			$me = typ.TypeString();
+		}
 	}
 		#me_exprliteral_rule    // literal value
 	|
@@ -455,11 +545,12 @@ metaexpr
 		#me_exprfuncall_rule    // a funcion call
 	|
 	{
-		//	System.out.println("Cast\t=====>\t#me_exprcast_rule");
+		//System.out.println("Cast\t=====>\t#me_exprcast_rule");
 	}
 	c = cast
 	{
 		$me = $c.c;
+		$value = $c.value;
 	}
 		#me_exprcast_rule       // cast a type to other
 	;
@@ -483,24 +574,23 @@ funcall
     ;
 
 cast
-	returns [String c]
+	returns [String c, String value]
 	:
 	{
 		//	System.out.println("CAST =====> #cast_rule");
 	}
 	t=type f=funcbody
 	{
-		$c = $t.t;
-		/*
-		if($t.t == typ.TypeString() || $f.f == typ.TypeString()){
-			$c = null;
-		}
-		else if($t.t == typ.TypeFloat() || $f.f == typ.TypeFloat()){
+		//	$c = $t.t;
+		//System.out.println($t.t + " - " + $f.f + " - " + $t.text + " - " + $f.text);
+		$value = $f.text;
+		if($t.t == typ.TypeString() || $f.f == typ.TypeString())
+			$c = typ.TypeString();
+		else if($t.t == typ.TypeFloat() || $f.f == typ.TypeFloat())
 			$c = typ.TypeFloat();
-		}
-		else{
+		else
 			$c = typ.TypeInteger();
-		}*/
+		//System.out.println($c);
 	}
 	    #cast_rule
 	;
@@ -526,7 +616,7 @@ literal
 	returns [String l]
 	:
 	{
-		System.out.println("Null\t=====>\t#literalnil_rule");
+		//	System.out.println("Null\t=====>\t#literalnil_rule");
 	}
 	'nil'
 		#literalnil_rule
@@ -632,7 +722,11 @@ symbol
 	:
 	tk=TOK_ID
 	{
+		/*if(pilha.size() > 0)
+			$s = pilha.pop();
+		els*/
 		$s = $tk.text;
+		//$s = (String) pilha.pop();
 	}
 		#symbol_rule
 	;
