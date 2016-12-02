@@ -1,6 +1,4 @@
-let x = let s1 = "inicio",
-			s2 = "fim"
+let x = int (let x2 = "9", x1 = "8", x0 = "7"
+in x2 :: x1 :: x0)
 in
-s1 :: (str 1000) :: s2
-in
-	"Resultado: " :: x
+x - 1
